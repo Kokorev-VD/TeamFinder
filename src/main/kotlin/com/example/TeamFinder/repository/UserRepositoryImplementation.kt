@@ -2,11 +2,9 @@ package com.example.TeamFinder.repository
 
 import com.example.TeamFinder.model.UserModel
 import dto.User
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Component
 
 @Component
@@ -42,11 +40,11 @@ class UserRepositoryImplementation(
         jdbcTemplate.query(
             "select * from userTable where id = (select max(id) from userTable)",
             ROW_MAPPER
-        ).firstOrNull()
+    ).firstOrNull()
 
 
     override fun create(login: String, password: String): Int {
-        var lastIdUserModel = findLastId()
+        val lastIdUserModel = findLastId()
         if(findByLogin(login) == null) {
             jdbcTemplate.update(
                 "insert into userTable (id, login, password) values (:id, :login, :password)",
@@ -58,7 +56,7 @@ class UserRepositoryImplementation(
                     )
                 ),
             )
-            return lastIdUserModel!!.id + 1
+            return lastIdUserModel.id + 1
         }
         else{
             return -2

@@ -1,5 +1,6 @@
 package com.example.TeamFinder.controller
 
+import com.example.TeamFinder.service.PostService
 import dto.User
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,45 +14,29 @@ import service.UserService
 
 @RestController
 @RequestMapping
-class UserController(
-    private val userService: UserService
+class Controller(
+    private val userService: UserService,
+    private val postService: PostService
 ) {
 
-    private val testLogin1:String = "Vitya"
-    private val testPassword1:String = "1234"
-    private val testLogin2 = "Kolya"
-    private val testPassword2:String = "4321"
-
-//    @GetMapping
-//    fun test(): String{
-//        return "hello";
-//    }
-
-//    @GetMapping
-//    fun getAll(): List<User> = userService.getAll()
-
-    @GetMapping("/{id}")
+    // Методы, которые относятся к User
+    @GetMapping("/user/{id}")
     fun getById(@PathVariable id: Int): User {
         return userService.getById(id)
     }
     
     @PostMapping("/reg")
-    fun create(@RequestBody user: User): String {
+    fun register(@RequestBody user: User): String {
         var m = userService.create(user)
         if (m == -2){
             return "Something go wrong..."
         }
-        return "You are registrated, ${user.login}"
+        return "You are registered, ${user.login}"
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/user/{id}")
     fun update(@PathVariable id: Int, @RequestBody user: User){
         TODO()
-    }
-
-    @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: Int) {
-        userService.deleteById(id)
     }
 
     @PostMapping("/auth")
@@ -62,4 +47,9 @@ class UserController(
         }
         return "Wrong login or password"
     }
+
+    //Методы, которые относятся к Post
+
+
+
 }

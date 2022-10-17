@@ -1,6 +1,5 @@
 package service
 
-import com.example.TeamFinder.model.UserModel
 import dto.User
 
 interface UserService {
