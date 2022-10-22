@@ -43,16 +43,21 @@ class UserRepositoryImplementation(
     ).firstOrNull()
 
 
-    override fun create(login: String, password: String): Int {
+    override fun create(login: String, password: String, tg: String, description: String, role:String, imageId:Int): Int {
         val lastIdUserModel = findLastId()
         if(findByLogin(login) == null) {
             jdbcTemplate.update(
-                "insert into userTable (id, login, password) values (:id, :login, :password)",
+                "insert into userTable (id, login, password, tg, description, role, imageId)" +
+                        " values (:id, :login, :password, :tg, :description, :role, :imageId)",
                 MapSqlParameterSource(
                     mapOf(
                         "id" to lastIdUserModel!!.id+1,
                         "login" to login,
                         "password" to password,
+                        "tg" to tg,
+                        "description" to description,
+                        "role" to role,
+                        "imageId" to imageId,
                     )
                 ),
             )
@@ -78,6 +83,10 @@ class UserRepositoryImplementation(
                 id = rs.getInt("id"),
                 login = rs.getString("login"),
                 password = rs.getString("password"),
+                tg = rs.getString("tg"),
+                description = rs.getString("description"),
+                role = rs.getString("role"),
+                imageId = rs.getInt("imageId"),
             )
         }
     }

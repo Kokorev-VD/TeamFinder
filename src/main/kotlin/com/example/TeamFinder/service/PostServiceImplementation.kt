@@ -6,7 +6,7 @@ import com.example.TeamFinder.repository.PostRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@Service
+//@Service("Post")
 class PostServiceImplementation (
     private val postRepository: PostRepository
 ): PostService {

@@ -1,6 +1,7 @@
 package com.example.TeamFinder.service
 
 import com.example.TeamFinder.dto.Post
+import org.springframework.stereotype.Service
 
 interface PostService {
 

@@ -16,7 +16,6 @@ import service.UserService
 @RequestMapping
 class Controller(
     private val userService: UserService,
-    private val postService: PostService
 ) {
 
     // Методы, которые относятся к User

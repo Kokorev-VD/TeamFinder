@@ -9,7 +9,7 @@ import service.UserService
 import java.lang.RuntimeException
 
 
-@Service
+@Service("User")
 class UserServiceImplementation(
     @Autowired private val userRepository: UserRepository
 ): UserService {
@@ -30,7 +30,7 @@ class UserServiceImplementation(
         userRepository.findLastId()!!.id
 
     override fun create(user: User): Int  =
-        userRepository.create(user.login, user.password)
+        userRepository.create(user.login, user.password, user.tg, user.description, user.role, user.imageId)
 
 
     override fun update(id: Int, user: User) {
@@ -45,5 +45,9 @@ class UserServiceImplementation(
         id = id,
         login = login,
         password = password,
+        tg = tg,
+        description = description,
+        role = role,
+        imageId = imageId,
     )
 }
