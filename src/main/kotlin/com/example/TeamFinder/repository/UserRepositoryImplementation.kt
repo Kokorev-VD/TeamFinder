@@ -12,11 +12,31 @@ class UserRepositoryImplementation(
     private val jdbcTemplate: NamedParameterJdbcTemplate
 ) : UserRepository {
 
-    override fun getAll(): List<UserModel>  =
+    override fun getAll(): List<UserModel> =
         jdbcTemplate.query(
             "select * from userTable",
             ROW_MAPPER
         )
+
+    override fun userParameterMapper(
+        login: String,
+        password: String,
+        tg: String,
+        description: String,
+        role: String,
+        imageId: Int
+    ): Map<String, Any> {
+        val lastIdUserModel = findLastId()
+        return mapOf(
+            "id" to lastIdUserModel!!.id + 1,
+            "login" to login,
+            "password" to password,
+            "tg" to tg,
+            "description" to description,
+            "role" to role,
+            "imageId" to imageId,
+        )
+    }
 
     override fun findById(id: Int): UserModel? =
         jdbcTemplate.query(
@@ -50,18 +70,10 @@ class UserRepositoryImplementation(
                 "insert into userTable (id, login, password, tg, description, role, imageId)" +
                         " values (:id, :login, :password, :tg, :description, :role, :imageId)",
                 MapSqlParameterSource(
-                    mapOf(
-                        "id" to lastIdUserModel!!.id+1,
-                        "login" to login,
-                        "password" to password,
-                        "tg" to tg,
-                        "description" to description,
-                        "role" to role,
-                        "imageId" to imageId,
-                    )
+                    userParameterMapper(login, password, tg, description, role, imageId)
                 ),
             )
-            return lastIdUserModel.id + 1
+            return lastIdUserModel!!.id + 1
         }
         else{
             return -2

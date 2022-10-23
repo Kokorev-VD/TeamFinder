@@ -13,10 +13,19 @@ interface UserRepository {
 
     fun findLastId(): UserModel?
 
-    fun create(login: String, password: String, tg: String, description: String, role:String, imageId:Int): Int
+    fun create(login: String, password: String, tg: String, description: String, role: String, imageId: Int): Int
 
     fun update(id: Int, user: User)
 
     fun deleteById(id: Int)
+
+    fun userParameterMapper(
+        login: String,
+        password: String,
+        tg: String,
+        description: String,
+        role: String,
+        imageId: Int
+    ): Map<String, Any>
 
 }

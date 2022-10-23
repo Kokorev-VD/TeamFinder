@@ -1,7 +1,6 @@
 package com.example.TeamFinder.service
 
 import com.example.TeamFinder.dto.Post
-import org.springframework.stereotype.Service
 
 interface PostService {
 
@@ -11,9 +10,9 @@ interface PostService {
 
     fun findLastId(): Post
 
-    fun create(new_post: Post): Int
+    fun create(newPost: Post): Int
 
-    fun update(id: Int, new_post: Post)
+    fun update(id: Int, newPost: Post)
 
     fun deleteById(id: Int)
 

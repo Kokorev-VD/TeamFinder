@@ -1,11 +1,12 @@
 package com.example.TeamFinder.repository
 
 import com.example.TeamFinder.model.PostModel
-import com.example.TeamFinder.model.UserModel
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Component
 
+@Component
 class PostRepositoryImplementation(
     private val jdbcTemplate: NamedParameterJdbcTemplate
 ) : PostRepository {
@@ -17,7 +18,7 @@ class PostRepositoryImplementation(
             mapOf(
                 "id" to id,
             ),
-            PostRepositoryImplementation.ROW_MAPPER
+            ROW_MAPPER
         ).firstOrNull()
 
     override fun findByCreator(creator: String): List<PostModel> =
@@ -37,23 +38,23 @@ class PostRepositoryImplementation(
         ).firstOrNull()
 
     override fun create(creator: String, header: String, body: String): Int {
-        val lastIdPostModel = findLastId()?.id ?: 0
-            jdbcTemplate.update(
-                "insert into userTable (id, creator, header, body, pos_mark, neg_mark) " +
-                        "values (id:, creator:, header:, body:, pos_mark:, neg_mark:)",
-                MapSqlParameterSource(
-                    mapOf(
-                        "id" to lastIdPostModel+1,
-                        "creator" to creator,
-                        "header" to header,
-                        "body" to body,
-                        "pos_mark" to 0,
-                        "neg_mark" to 0,
-                    )
-                ),
-            )
-            return lastIdPostModel+ 1
-        }
+        val lastIdPostModel = findLastId()?.id ?: -1
+        jdbcTemplate.update(
+            "insert into postTable (id, creator, header, body, pos_mark, neg_mark) " +
+                    "values (:id, :creator, :header, :body, :pos_mark, :neg_mark)",
+            MapSqlParameterSource(
+                mapOf(
+                    "id" to lastIdPostModel + 1,
+                    "creator" to creator,
+                    "header" to header,
+                    "body" to body,
+                    "pos_mark" to 0,
+                    "neg_mark" to 0,
+                )
+            ),
+        )
+        return lastIdPostModel+ 1
+    }
 
     override fun update(id: Int, new_post: PostModel) {
         TODO("Not yet implemented")
@@ -64,8 +65,7 @@ class PostRepositoryImplementation(
     }
 
     private companion object{
-        val ROW_MAPPER = RowMapper<PostModel>{
-                rs, _ ->
+        val ROW_MAPPER = RowMapper<PostModel>{ rs, _ ->
             PostModel(
                 id = rs.getInt("id"),
                 creator = rs.getString("creator"),

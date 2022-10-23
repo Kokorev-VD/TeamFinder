@@ -6,9 +6,9 @@ import com.example.TeamFinder.repository.PostRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-//@Service("Post")
+@Service
 class PostServiceImplementation (
-    private val postRepository: PostRepository
+    @Autowired private val postRepository: PostRepository
 ): PostService {
 
     override fun getById(id: Int): Post  =
@@ -29,14 +29,14 @@ class PostServiceImplementation (
         postRepository.findLastId()?.toDto()!!
 
 
-    override fun create(new_post: Post): Int =
+    override fun create(newPost: Post): Int =
         postRepository.create(
-            creator = new_post.creator,
-            header = new_post.header,
-            body = new_post.body,
+            creator = newPost.creator,
+            header = newPost.header,
+            body = newPost.body,
         )
 
-    override fun update(id: Int, new_post: Post) {
+    override fun update(id: Int, newPost: Post) {
         TODO("Not yet implemented")
     }
 
