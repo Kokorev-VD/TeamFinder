@@ -1,5 +1,6 @@
 package com.example.TeamFinder.controller
 
+import com.example.TeamFinder.dto.ChangeableUserParams
 import com.example.TeamFinder.dto.Post
 import com.example.TeamFinder.service.PostService
 import dto.User
@@ -29,8 +30,8 @@ class Controller(
     }
 
     @PutMapping("/user/{id}")
-    fun updateUserById(@PathVariable id: Int, @RequestBody user: User) {
-        TODO()
+    fun updateUserById(@PathVariable id: Int, @RequestBody userParams: ChangeableUserParams) {
+        userService.update(id, userParams)
     }
 
     @PostMapping("/auth")
@@ -59,5 +60,9 @@ class Controller(
         return "${newPost.creator}, you created new post ${newPost.header}"
     }
 
+    @PutMapping("/post/id/{id}/mark/{markType}/{markChange}")
+    fun markUpdate(@PathVariable id: Int, @PathVariable markChange: Int, @PathVariable markType: String) {
+        postService.markUpdate(id, markChange, markType)
+    }
 
 }

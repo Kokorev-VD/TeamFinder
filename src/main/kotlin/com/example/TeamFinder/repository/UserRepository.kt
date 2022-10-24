@@ -1,7 +1,6 @@
 package com.example.TeamFinder.repository
 
 import com.example.TeamFinder.model.UserModel
-import dto.User
 
 interface UserRepository {
 
@@ -15,7 +14,7 @@ interface UserRepository {
 
     fun create(login: String, password: String, tg: String, description: String, role: String, imageId: Int): Int
 
-    fun update(id: Int, user: User)
+    fun update(id: Int, login: String, tg: String, description: String, imageId: Int)
 
     fun deleteById(id: Int)
 

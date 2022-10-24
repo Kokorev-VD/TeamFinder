@@ -12,7 +12,9 @@ interface PostRepository {
 
     fun create(creator: String, header: String, body: String): Int
 
-    fun update(id: Int, new_post:PostModel)
+    fun update(id: Int, new_post: PostModel)
+
+    fun markUpdate(id: Int, markChange: Int, markType: String)
 
     fun deleteById(id: Int)
 

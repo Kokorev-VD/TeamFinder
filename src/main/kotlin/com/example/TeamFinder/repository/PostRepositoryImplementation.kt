@@ -27,14 +27,14 @@ class PostRepositoryImplementation(
             mapOf(
                 "creator" to creator,
             ),
-            PostRepositoryImplementation.ROW_MAPPER
+            ROW_MAPPER
         )
 
 
     override fun findLastId(): PostModel? =
         jdbcTemplate.query(
             "select * from postTable where id = (select max(id) from postTable)",
-            PostRepositoryImplementation.ROW_MAPPER
+            ROW_MAPPER
         ).firstOrNull()
 
     override fun create(creator: String, header: String, body: String): Int {
@@ -53,19 +53,30 @@ class PostRepositoryImplementation(
                 )
             ),
         )
-        return lastIdPostModel+ 1
+        return lastIdPostModel + 1
     }
 
     override fun update(id: Int, new_post: PostModel) {
         TODO("Not yet implemented")
     }
 
+    override fun markUpdate(id: Int, markChange: Int, markType: String) {
+        jdbcTemplate.update(
+            "update postTable set ${markType}_mark = :newMark where id = :id",
+            mapOf(
+                "newMark" to if (markType == "pos") findById(id)!!.pos_mark + markChange else findById(id)!!.pos_mark + markChange,
+                "id" to id,
+            )
+        )
+    }
+
+
     override fun deleteById(id: Int) {
         TODO("Not yet implemented")
     }
 
-    private companion object{
-        val ROW_MAPPER = RowMapper<PostModel>{ rs, _ ->
+    private companion object {
+        val ROW_MAPPER = RowMapper<PostModel> { rs, _ ->
             PostModel(
                 id = rs.getInt("id"),
                 creator = rs.getString("creator"),

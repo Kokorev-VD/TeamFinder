@@ -1,7 +1,6 @@
 package com.example.TeamFinder.repository
 
 import com.example.TeamFinder.model.UserModel
-import dto.User
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -75,22 +74,28 @@ class UserRepositoryImplementation(
             )
             return lastIdUserModel!!.id + 1
         }
-        else{
-            return -2
-        }
+        return -2
     }
 
-    override fun update(id: Int, user: User) {
-        TODO("Not yet implemented")
+    override fun update(id: Int, login: String, tg: String, description: String, imageId: Int) {
+        jdbcTemplate.update(
+            "update userTable set login = :login, tg = :tg, description = :description, imageId = :imageId where id = :id",
+            mapOf(
+                "login" to login,
+                "tg" to tg,
+                "description" to description,
+                "imageId" to imageId,
+                "id" to id,
+            )
+        )
     }
 
     override fun deleteById(id: Int) {
         TODO("Not yet implemented")
     }
 
-    private companion object{
-        val ROW_MAPPER = RowMapper<UserModel>{
-            rs, _ ->
+    private companion object {
+        val ROW_MAPPER = RowMapper<UserModel> { rs, _ ->
             UserModel(
                 id = rs.getInt("id"),
                 login = rs.getString("login"),

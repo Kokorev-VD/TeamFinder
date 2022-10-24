@@ -14,6 +14,8 @@ interface PostService {
 
     fun update(id: Int, newPost: Post)
 
+    fun markUpdate(id: Int, markChange: Int, markType: String)
+
     fun deleteById(id: Int)
 
 }

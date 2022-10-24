@@ -1,12 +1,12 @@
 package com.example.TeamFinder.service
 
+import com.example.TeamFinder.dto.ChangeableUserParams
 import com.example.TeamFinder.model.UserModel
 import com.example.TeamFinder.repository.UserRepository
 import dto.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import service.UserService
-import java.lang.RuntimeException
 
 
 @Service("User")
@@ -23,18 +23,21 @@ class UserServiceImplementation(
 
     override fun findByLogin(login: String): User =
         userRepository.findByLogin(login)
-            ?.toDto() ?:
-        User(-2, "", "")
+            ?.toDto() ?: User(-2, "", "")
 
     override fun findLastId(): Int =
         userRepository.findLastId()!!.id
 
-    override fun create(user: User): Int  =
+    override fun create(user: User): Int =
         userRepository.create(user.login, user.password, user.tg, user.description, user.role, user.imageId)
 
 
-    override fun update(id: Int, user: User) {
-        TODO("Not yet implemented")
+    override fun update(id: Int, userParams: ChangeableUserParams) {
+        if (getById(id).login == userParams.login || findByLogin(userParams.login).id == -2) {
+            userRepository.update(id, userParams.login, userParams.tg, userParams.description, userParams.imageId)
+        } else {
+            throw RuntimeException("This login already exists")
+        }
     }
 
     override fun deleteById(id: Int) {

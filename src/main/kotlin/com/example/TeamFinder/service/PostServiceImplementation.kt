@@ -11,9 +11,8 @@ class PostServiceImplementation (
     @Autowired private val postRepository: PostRepository
 ): PostService {
 
-    override fun getById(id: Int): Post  =
-        postRepository.findById(id)?.toDto() ?:
-        Post(
+    override fun getById(id: Int): Post =
+        postRepository.findById(id)?.toDto() ?: Post(
             id = -2,
             creator = "",
             header = "",
@@ -22,8 +21,12 @@ class PostServiceImplementation (
             neg_mark = 0,
         )
 
+    override fun markUpdate(id: Int, markChange: Int, markType: String) {
+        postRepository.markUpdate(id, markChange, markType)
+    }
+
     override fun getByCreator(creator: String): List<Post> =
-        postRepository.findByCreator(creator).map{ it.toDto() }
+        postRepository.findByCreator(creator).map { it.toDto() }
 
     override fun findLastId(): Post =
         postRepository.findLastId()?.toDto()!!

@@ -1,5 +1,6 @@
 package service
 
+import com.example.TeamFinder.dto.ChangeableUserParams
 import dto.User
 
 interface UserService {
@@ -14,7 +15,7 @@ interface UserService {
 
     fun create(user: User): Int
 
-    fun update(id: Int, user: User)
+    fun update(id: Int, userParams: ChangeableUserParams)
 
     fun deleteById(id: Int)
 
