@@ -14,7 +14,7 @@ class PostServiceImplementation (
     override fun getById(id: Int): Post =
         postRepository.findById(id)?.toDto() ?: Post(
             id = -2,
-            creator = "",
+            creator = -1,
             header = "",
             body = "",
             pos_mark = 0,
@@ -25,7 +25,7 @@ class PostServiceImplementation (
         postRepository.markUpdate(id, markChange, markType)
     }
 
-    override fun getByCreator(creator: String): List<Post> =
+    override fun getByCreator(creator: Int): List<Post> =
         postRepository.findByCreator(creator).map { it.toDto() }
 
     override fun findLastId(): Post =
@@ -40,14 +40,23 @@ class PostServiceImplementation (
         )
 
     override fun update(id: Int, newPost: Post) {
-        TODO("Not yet implemented")
+        postRepository.update(id, newPost.toModel())
     }
 
     override fun deleteById(id: Int) {
-        TODO("Not yet implemented")
+        postRepository.deleteById(id)
     }
 
     private fun PostModel.toDto() = Post(
+        id = id,
+        creator = creator,
+        header = header,
+        body = body,
+        pos_mark = pos_mark,
+        neg_mark = neg_mark,
+    )
+
+    private fun Post.toModel() = PostModel(
         id = id,
         creator = creator,
         header = header,

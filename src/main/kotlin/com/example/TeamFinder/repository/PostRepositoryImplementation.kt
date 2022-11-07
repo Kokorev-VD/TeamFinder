@@ -21,14 +21,15 @@ class PostRepositoryImplementation(
             ROW_MAPPER
         ).firstOrNull()
 
-    override fun findByCreator(creator: String): List<PostModel> =
-        jdbcTemplate.query(
+    override fun findByCreator(creator: Int): List<PostModel> {
+        return jdbcTemplate.query(
             "select * from postTable where creator = :creator",
             mapOf(
                 "creator" to creator,
             ),
             ROW_MAPPER
         )
+    }
 
 
     override fun findLastId(): PostModel? =
@@ -37,7 +38,7 @@ class PostRepositoryImplementation(
             ROW_MAPPER
         ).firstOrNull()
 
-    override fun create(creator: String, header: String, body: String): Int {
+    override fun create(creator: Int, header: String, body: String): Int {
         val lastIdPostModel = findLastId()?.id ?: -1
         jdbcTemplate.update(
             "insert into postTable (id, creator, header, body, pos_mark, neg_mark) " +
@@ -56,9 +57,24 @@ class PostRepositoryImplementation(
         return lastIdPostModel + 1
     }
 
-    override fun update(id: Int, new_post: PostModel) {
-        TODO("Not yet implemented")
+    override fun update(id: Int, newPost: PostModel) {
+        jdbcTemplate.update(
+            "update postTable set creator = :creator, header = :header, body = :body, pos_mark = :pos_mark," +
+                    "neg_mark = :neg_mark where id = :id",
+            MapSqlParameterSource(
+                mapOf(
+                    "id" to id,
+                    "creator" to newPost.creator,
+                    "header" to newPost.header,
+                    "body" to newPost.body,
+                    "pos_mark" to newPost.pos_mark,
+                    "neg_mark" to newPost.neg_mark,
+                )
+            ),
+
+            )
     }
+
 
     override fun markUpdate(id: Int, markChange: Int, markType: String) {
         jdbcTemplate.update(
@@ -72,14 +88,19 @@ class PostRepositoryImplementation(
 
 
     override fun deleteById(id: Int) {
-        TODO("Not yet implemented")
+        jdbcTemplate.update(
+            "delete from postTable where id = :id",
+            mapOf(
+                "id" to id,
+            )
+        )
     }
 
     private companion object {
         val ROW_MAPPER = RowMapper<PostModel> { rs, _ ->
             PostModel(
                 id = rs.getInt("id"),
-                creator = rs.getString("creator"),
+                creator = rs.getInt("creator"),
                 header = rs.getString("header"),
                 body = rs.getString("body"),
                 pos_mark = rs.getInt("pos_mark"),

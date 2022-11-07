@@ -15,7 +15,7 @@ interface UserService {
 
     fun create(user: User): Int
 
-    fun update(id: Int, userParams: ChangeableUserParams)
+    fun update(userParams: ChangeableUserParams): Int
 
     fun deleteById(id: Int)
 

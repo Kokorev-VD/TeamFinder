@@ -61,6 +61,7 @@ class UserRepositoryImplementation(
             ROW_MAPPER
     ).firstOrNull()
 
+//    SPRING REPOSITORIES
 
     override fun create(login: String, password: String, tg: String, description: String, role:String, imageId:Int): Int {
         val lastIdUserModel = findLastId()

@@ -6,7 +6,7 @@ interface PostService {
 
     fun getById(id: Int): Post
 
-    fun getByCreator(creator: String): List<Post>
+    fun getByCreator(creator: Int): List<Post>
 
     fun findLastId(): Post
 

@@ -2,7 +2,7 @@ package com.example.TeamFinder.model
 
 data class PostModel(
     val id: Int,
-    val creator: String,
+    var creator: Int,
     val header: String,
     val body: String,
     val pos_mark: Int,

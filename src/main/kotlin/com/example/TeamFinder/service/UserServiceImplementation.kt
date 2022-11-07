@@ -11,7 +11,7 @@ import service.UserService
 
 @Service("User")
 class UserServiceImplementation(
-    @Autowired private val userRepository: UserRepository
+    @Autowired private val userRepository: UserRepository,
 ): UserService {
     override fun getAll(): List<User> = userRepository.getAll()
         .map{ it.toDto() }
@@ -32,12 +32,13 @@ class UserServiceImplementation(
         userRepository.create(user.login, user.password, user.tg, user.description, user.role, user.imageId)
 
 
-    override fun update(id: Int, userParams: ChangeableUserParams) {
+    override fun update(userParams: ChangeableUserParams): Int {
+        val id = userParams.id
         if (getById(id).login == userParams.login || findByLogin(userParams.login).id == -2) {
             userRepository.update(id, userParams.login, userParams.tg, userParams.description, userParams.imageId)
-        } else {
-            throw RuntimeException("This login already exists")
+            return 100
         }
+        return 200
     }
 
     override fun deleteById(id: Int) {

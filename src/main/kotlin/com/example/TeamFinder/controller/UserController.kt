@@ -1,6 +1,7 @@
 package com.example.TeamFinder.controller
 
 import com.example.TeamFinder.dto.ChangeableUserParams
+import com.example.TeamFinder.dto.LoginUserParams
 import com.example.TeamFinder.dto.Post
 import com.example.TeamFinder.service.PostService
 import dto.User
@@ -15,54 +16,60 @@ class Controller(
 ) {
 
     // Методы, которые относятся к User
-    @GetMapping("/user/{id}")
-    fun getUserById(@PathVariable id: Int): User =
+    @GetMapping("/user")
+    fun getUserById(@RequestBody id: Int): User =
         userService.getById(id)
 
 
-    @PostMapping("/reg")
-    fun registerNewUser(@RequestBody user: User): String {
+    @PostMapping("/auth/reg")
+    fun registerNewUser(@RequestBody user: User): Int {
         var m = userService.create(user)
         if (m == -2) {
-            return "Something go wrong..."
+            return 200
         }
-        return "You are registered, ${user.login}"
+        return 100
     }
 
-    @PutMapping("/user/{id}")
-    fun updateUserById(@PathVariable id: Int, @RequestBody userParams: ChangeableUserParams) {
-        userService.update(id, userParams)
-    }
+    @PutMapping("/user/update")
+    fun updateUserById(@RequestBody userParams: ChangeableUserParams): Int =
+        userService.update(userParams)
 
-    @PostMapping("/auth")
-    fun authorizeNewUser(@RequestBody user: User): String {
+
+    @PostMapping("/auth/log")
+    fun authorizeNewUser(@RequestBody user: LoginUserParams): Int {
         if (userService.findByLogin(user.login)
                 .password == user.password && user.login != ""
         ) {
-            return "Hello, ${user.login}!"
+            return 100
         }
-        return "Wrong login or password"
+        return 200
     }
 
     //Методы, которые относятся к Post
 
-    @GetMapping("/post/id/{id}")
-    fun getPostById(@PathVariable id: Int) =
+    @GetMapping("/post")
+    fun getPostById(@RequestBody id: Int) =
         postService.getById(id)
 
-    @GetMapping("/post/creator/{creator}")
-    fun getPostByCreator(@PathVariable creator: String) =
-        postService.getByCreator(creator)
-
-    @PostMapping("/post/create_new_post")
-    fun createNewPost(@RequestBody newPost: Post): String {
-        postService.create(newPost)
-        return "${newPost.creator}, you created new post ${newPost.header}"
+    @GetMapping("/post/creator")
+    fun getPostByCreator(@RequestBody creator: Int): List<Post> {
+        return postService.getByCreator(creator)
     }
 
-    @PutMapping("/post/id/{id}/mark/{markType}/{markChange}")
-    fun markUpdate(@PathVariable id: Int, @PathVariable markChange: Int, @PathVariable markType: String) {
-        postService.markUpdate(id, markChange, markType)
+    @PostMapping("/post/new")
+    fun createNewPost(@RequestBody newPost: Post): Int {
+        postService.create(newPost)
+        return 100
+    }
+
+    @PutMapping("/post/update")
+    fun updatePostById(@RequestBody newPost: Post) {
+        postService.update(newPost.id, newPost)
+    }
+
+    @DeleteMapping("/post/delete")
+    fun deletePostById(@RequestBody id: Int) {
+        postService.deleteById(id)
     }
 
 }
