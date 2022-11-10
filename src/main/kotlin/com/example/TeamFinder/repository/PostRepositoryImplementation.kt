@@ -57,7 +57,10 @@ class PostRepositoryImplementation(
         return lastIdPostModel + 1
     }
 
-    override fun update(id: Int, newPost: PostModel) {
+    override fun update(id: Int, newPost: PostModel): Int {
+        if (findById(id) == null) {
+            return 200
+        }
         jdbcTemplate.update(
             "update postTable set creator = :creator, header = :header, body = :body, pos_mark = :pos_mark," +
                     "neg_mark = :neg_mark where id = :id",
@@ -71,8 +74,8 @@ class PostRepositoryImplementation(
                     "neg_mark" to newPost.neg_mark,
                 )
             ),
-
-            )
+        )
+        return 100
     }
 
 
@@ -87,13 +90,17 @@ class PostRepositoryImplementation(
     }
 
 
-    override fun deleteById(id: Int) {
+    override fun deleteById(id: Int): Int {
+        if (findById(id) == null) {
+            return 200
+        }
         jdbcTemplate.update(
             "delete from postTable where id = :id",
             mapOf(
                 "id" to id,
             )
         )
+        return 100
     }
 
     private companion object {

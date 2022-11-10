@@ -75,7 +75,7 @@ class UserRepositoryImplementation(
             )
             return lastIdUserModel!!.id + 1
         }
-        return -2
+        return 200
     }
 
     override fun update(id: Int, login: String, tg: String, description: String, imageId: Int) {

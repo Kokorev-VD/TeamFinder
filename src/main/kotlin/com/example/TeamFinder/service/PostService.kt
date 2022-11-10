@@ -12,10 +12,10 @@ interface PostService {
 
     fun create(newPost: Post): Int
 
-    fun update(id: Int, newPost: Post)
+    fun update(id: Int, newPost: Post): Int
 
     fun markUpdate(id: Int, markChange: Int, markType: String)
 
-    fun deleteById(id: Int)
+    fun deleteById(id: Int): Int
 
 }

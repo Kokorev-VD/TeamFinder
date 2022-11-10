@@ -17,18 +17,13 @@ class Controller(
 
     // Методы, которые относятся к User
     @GetMapping("/user")
-    fun getUserById(@RequestBody id: Int): User =
+    fun getUserById(@RequestBody id: Int): Any =
         userService.getById(id)
 
 
     @PostMapping("/auth/reg")
-    fun registerNewUser(@RequestBody user: User): Int {
-        var m = userService.create(user)
-        if (m == -2) {
-            return 200
-        }
-        return 100
-    }
+    fun registerNewUser(@RequestBody user: User): Int =
+        userService.create(user)
 
     @PutMapping("/user/update")
     fun updateUserById(@RequestBody userParams: ChangeableUserParams): Int =
@@ -36,14 +31,9 @@ class Controller(
 
 
     @PostMapping("/auth/log")
-    fun authorizeNewUser(@RequestBody user: LoginUserParams): Int {
-        if (userService.findByLogin(user.login)
-                .password == user.password && user.login != ""
-        ) {
-            return 100
-        }
-        return 200
-    }
+    fun authorizeNewUser(@RequestBody user: LoginUserParams): Int =
+        userService.authorisation(user)
+
 
     //Методы, которые относятся к Post
 
@@ -52,24 +42,21 @@ class Controller(
         postService.getById(id)
 
     @GetMapping("/post/creator")
-    fun getPostByCreator(@RequestBody creator: Int): List<Post> {
-        return postService.getByCreator(creator)
-    }
+    fun getPostByCreator(@RequestBody creator: Int): List<Post> =
+        postService.getByCreator(creator)
 
     @PostMapping("/post/new")
-    fun createNewPost(@RequestBody newPost: Post): Int {
+    fun createNewPost(@RequestBody newPost: Post): Int =
         postService.create(newPost)
-        return 100
-    }
 
     @PutMapping("/post/update")
-    fun updatePostById(@RequestBody newPost: Post) {
+    fun updatePostById(@RequestBody newPost: Post) =
         postService.update(newPost.id, newPost)
-    }
+
 
     @DeleteMapping("/post/delete")
-    fun deletePostById(@RequestBody id: Int) {
+    fun deletePostById(@RequestBody id: Int) =
         postService.deleteById(id)
-    }
+
 
 }

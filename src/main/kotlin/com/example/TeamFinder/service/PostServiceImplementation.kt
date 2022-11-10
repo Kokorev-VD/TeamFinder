@@ -32,20 +32,20 @@ class PostServiceImplementation (
         postRepository.findLastId()?.toDto()!!
 
 
-    override fun create(newPost: Post): Int =
+    override fun create(newPost: Post): Int {
         postRepository.create(
             creator = newPost.creator,
             header = newPost.header,
             body = newPost.body,
         )
+        return 100
+    }
 
-    override fun update(id: Int, newPost: Post) {
+    override fun update(id: Int, newPost: Post): Int =
         postRepository.update(id, newPost.toModel())
-    }
 
-    override fun deleteById(id: Int) {
+    override fun deleteById(id: Int): Int =
         postRepository.deleteById(id)
-    }
 
     private fun PostModel.toDto() = Post(
         id = id,
