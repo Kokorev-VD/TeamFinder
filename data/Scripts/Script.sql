@@ -17,6 +17,10 @@ pos_mark int,
 neg_mark int
 )
 
+alter table usertable
+add tags text
+
+
 drop table usertable 
 
 drop table posttable 
@@ -31,7 +35,7 @@ delete from userTable where login ='Misha' or login='Vanya'
 
 delete from postTable where id = 0 or id = 1 
 
-select * from postTable
+select * from userTable
 
 select * from postTable where creator = 'Vitya'
 

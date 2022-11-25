@@ -5,8 +5,10 @@ import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 
 @Component
+@Repository
 class UserRepositoryImplementation(
     private val jdbcTemplate: NamedParameterJdbcTemplate
 ) : UserRepository {
@@ -16,26 +18,6 @@ class UserRepositoryImplementation(
             "select * from userTable",
             ROW_MAPPER
         )
-
-    override fun userParameterMapper(
-        login: String,
-        password: String,
-        tg: String,
-        description: String,
-        role: String,
-        imageId: Int
-    ): Map<String, Any> {
-        val lastIdUserModel = findLastId()
-        return mapOf(
-            "id" to lastIdUserModel!!.id + 1,
-            "login" to login,
-            "password" to password,
-            "tg" to tg,
-            "description" to description,
-            "role" to role,
-            "imageId" to imageId,
-        )
-    }
 
     override fun findById(id: Int): UserModel? =
         jdbcTemplate.query(
@@ -63,29 +45,49 @@ class UserRepositoryImplementation(
 
 //    SPRING REPOSITORIES
 
-    override fun create(login: String, password: String, tg: String, description: String, role:String, imageId:Int): Int {
+    override fun create(
+        login: String,
+        password: String,
+        tg: String,
+        description: String,
+        role: String,
+        imageId: Int,
+        access: Boolean,
+        tags: String,
+    ): Int {
         val lastIdUserModel = findLastId()
-        if(findByLogin(login) == null) {
+        if (findByLogin(login) == null) {
             jdbcTemplate.update(
-                "insert into userTable (id, login, password, tg, description, role, imageId)" +
-                        " values (:id, :login, :password, :tg, :description, :role, :imageId)",
+                "insert into userTable (id, login, password, tg, description, role, imageId, access, tags)" +
+                        " values (:id, :login, :password, :tg, :description, :role, :imageId, :access, :tags)",
                 MapSqlParameterSource(
-                    userParameterMapper(login, password, tg, description, role, imageId)
+                    mapOf(
+                        "id" to lastIdUserModel!!.id + 1,
+                        "login" to login,
+                        "password" to password,
+                        "tg" to tg,
+                        "description" to description,
+                        "role" to role,
+                        "imageId" to imageId,
+                        "access" to access,
+                        "tags" to tags,
+                    )
                 ),
             )
-            return lastIdUserModel!!.id + 1
+            return lastIdUserModel.id + 1
         }
         return 200
     }
 
-    override fun update(id: Int, login: String, tg: String, description: String, imageId: Int) {
+    override fun update(id: Int, login: String, tg: String, description: String, imageId: Int, tags: String) {
         jdbcTemplate.update(
-            "update userTable set login = :login, tg = :tg, description = :description, imageId = :imageId where id = :id",
+            "update userTable set login = :login, tg = :tg, description = :description, imageId = :imageId, tags = :tags where id = :id",
             mapOf(
                 "login" to login,
                 "tg" to tg,
                 "description" to description,
                 "imageId" to imageId,
+                "tags" to tags,
                 "id" to id,
             )
         )
@@ -105,6 +107,8 @@ class UserRepositoryImplementation(
                 description = rs.getString("description"),
                 role = rs.getString("role"),
                 imageId = rs.getInt("imageId"),
+                access = rs.getBoolean("access"),
+                tags = rs.getString("tags")
             )
         }
     }

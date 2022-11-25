@@ -29,7 +29,17 @@ class UserServiceImplementation(
         userRepository.findLastId()!!.id
 
     override fun create(user: User): Int {
-        if (userRepository.create(user.login, user.password, user.tg, user.description, user.role, user.imageId) == 200)
+        if (userRepository.create(
+                user.login,
+                user.password,
+                user.tg,
+                user.description,
+                user.role,
+                user.imageId,
+                user.access,
+                user.tags.joinToString("&")
+            ) == 200
+        )
             return 200
         return 100
     }
@@ -38,7 +48,14 @@ class UserServiceImplementation(
     override fun update(userParams: ChangeableUserParams): Int {
         val id = userParams.id
         if (getById(id).login == userParams.login) {
-            userRepository.update(id, userParams.login, userParams.tg, userParams.description, userParams.imageId)
+            userRepository.update(
+                id,
+                userParams.login,
+                userParams.tg,
+                userParams.description,
+                userParams.imageId,
+                userParams.tags.joinToString("&")
+            )
             return 100
         }
         return 200
@@ -62,5 +79,7 @@ class UserServiceImplementation(
         description = description,
         role = role,
         imageId = imageId,
+        access = access,
+        tags = tags.split("&")
     )
 }

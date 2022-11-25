@@ -5,5 +5,7 @@ data class ChangeableUserParams(
     val login: String,
     val tg: String,
     val description: String,
-    val imageId: Int
+    val imageId: Int,
+    val role: String = "",
+    val tags: List<String> = listOf(),
 )

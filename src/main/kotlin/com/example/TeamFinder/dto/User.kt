@@ -6,6 +6,8 @@ data class User(
     val password: String = "",
     val tg: String = "",
     val description: String = "",
-    val role: String = "user",
+    val role: String = "",
     val imageId: Int = 0,
+    val access: Boolean = false,
+    val tags: List<String> = listOf(),
 )
