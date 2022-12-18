@@ -5,40 +5,62 @@
 			"provider": "postgresql",
 			"driver": "postgres-jdbc",
 			"name": "postgres",
-			"save-password": true,
-			"read-only": false,
-			"configuration": {
-				"host": "localhost",
-				"port": "5432",
-				"database": "postgres",
-				"url": "jdbc:postgresql://localhost:5432/postgres",
-				"home": "postgresql-x64-14",
-				"type": "dev",
-				"provider-properties": {
-					"@dbeaver-show-non-default-db@": "false",
-					"@dbeaver-show-template-db@": "false",
-					"@dbeaver-show-unavailable-db@": "false",
-					"show-database-statistics": "false",
-					"@dbeaver-read-all-data-types-db@": "false",
-					"read-keys-with-columns": "false",
-					"@dbeaver-use-prepared-statements-db@": "false",
-					"postgresql.dd.plain.string": "false",
-					"postgresql.dd.tag.string": "false"
-				},
-				"auth-model": "native",
-				"handlers": {}
-			}
-		}
-	},
-	"connection-types": {
-		"dev": {
-			"name": "Разработка",
-			"color": "255,255,255",
-			"description": "База данных для разработки",
-			"auto-commit": true,
-			"confirm-execute": false,
-			"confirm-data-change": false,
-			"auto-close-transactions": false
-		}
-	}
+          "save-password": true,
+          "read-only": false,
+          "configuration": {
+            "host": "localhost",
+            "port": "5432",
+            "database": "postgres",
+            "url": "jdbc:postgresql://localhost:5432/postgres",
+            "home": "postgresql-x64-14",
+            "type": "dev",
+            "provider-properties": {
+              "@dbeaver-show-non-default-db@": "false",
+              "@dbeaver-show-template-db@": "false",
+              "@dbeaver-show-unavailable-db@": "false",
+              "show-database-statistics": "false",
+              "@dbeaver-read-all-data-types-db@": "false",
+              "read-keys-with-columns": "false",
+              "@dbeaver-use-prepared-statements-db@": "false",
+              "postgresql.dd.plain.string": "false",
+              "postgresql.dd.tag.string": "false"
+            },
+            "auth-model": "native"
+          }
+        }
+    },
+  "virtual-models": {
+    "postgres-jdbc-183d1fc694e-40ce8a5803075db8": {
+      "postgres": {
+        "public": {
+          "@properties": {
+            "erd.diagram.state": {
+              "serialized": "<diagram version=\"1\" name=\"empty\" time=\"202212051748\"><entities><data-source id=\"postgres-jdbc-183d1fc694e-40ce8a5803075db8\"><entity id=\"1\" name=\"marktable\" fq-name=\"public.marktable\" order=\"0\" x=\"803\" y=\"429\"><path name=\"public\"/><path name=\"postgres\"/></entity><entity id=\"2\" name=\"postextensiontable\" fq-name=\"public.postextensiontable\" order=\"1\" x=\"1018\" y=\"183\"><path name=\"public\"/><path name=\"postgres\"/></entity><entity id=\"3\" name=\"posttable\" fq-name=\"public.posttable\" order=\"2\" x=\"921\" y=\"303\"><path name=\"public\"/><path name=\"postgres\"/></entity><entity id=\"4\" name=\"posttotagtable\" fq-name=\"public.posttotagtable\" order=\"3\" x=\"913\" y=\"529\"><path name=\"public\"/><path name=\"postgres\"/></entity><entity id=\"5\" name=\"tagtable\" fq-name=\"public.tagtable\" order=\"4\" x=\"591\" y=\"533\"><path name=\"public\"/><path name=\"postgres\"/></entity><entity id=\"6\" name=\"teamtable\" fq-name=\"public.teamtable\" order=\"5\" x=\"809\" y=\"183\"><path name=\"public\"/><path name=\"postgres\"/></entity><entity id=\"7\" name=\"userachievementstable\" fq-name=\"public.userachievementstable\" order=\"6\" x=\"655\" y=\"98\"><path name=\"public\"/><path name=\"postgres\"/></entity><entity id=\"8\" name=\"userloginparamstable\" fq-name=\"public.userloginparamstable\" order=\"7\" x=\"466\" y=\"181\"><path name=\"public\"/><path name=\"postgres\"/></entity><entity id=\"9\" name=\"usertable\" fq-name=\"public.usertable\" order=\"8\" x=\"681\" y=\"302\"><path name=\"public\"/><path name=\"postgres\"/></entity><entity id=\"10\" name=\"usertotagtable\" fq-name=\"public.usertotagtable\" order=\"9\" x=\"491\" y=\"317\"><path name=\"public\"/><path name=\"postgres\"/></entity></data-source></entities><relations><relation name=\"marktable_postid_fkey\" fq-name=\"public.marktable.marktable_postid_fkey\" type=\"fk\" pk-ref=\"3\" fk-ref=\"1\"/><relation name=\"postextensiontable_basedpostid_fkey\" fq-name=\"public.postextensiontable.postextensiontable_basedpostid_fkey\" type=\"fk\" pk-ref=\"3\" fk-ref=\"2\"><bend type=\"abs\" x=\"1082\" y=\"357\"/></relation><relation name=\"postextensiontable_derivedpostid_fkey\" fq-name=\"public.postextensiontable.postextensiontable_derivedpostid_fkey\" type=\"fk\" pk-ref=\"3\" fk-ref=\"2\"/><relation name=\"posttotagtable_postid_fkey\" fq-name=\"public.posttotagtable.posttotagtable_postid_fkey\" type=\"fk\" pk-ref=\"3\" fk-ref=\"4\"/><relation name=\"teamtable_teamid_fkey\" fq-name=\"public.teamtable.teamtable_teamid_fkey\" type=\"fk\" pk-ref=\"3\" fk-ref=\"6\"/><relation name=\"posttotagtable_tagid_fkey\" fq-name=\"public.posttotagtable.posttotagtable_tagid_fkey\" type=\"fk\" pk-ref=\"5\" fk-ref=\"4\"/><relation name=\"usertotagtable_tagid_fkey\" fq-name=\"public.usertotagtable.usertotagtable_tagid_fkey\" type=\"fk\" pk-ref=\"5\" fk-ref=\"10\"><bend type=\"abs\" x=\"547\" y=\"565\"/></relation><relation name=\"usertable_id_fkey\" fq-name=\"public.usertable.usertable_id_fkey\" type=\"fk\" pk-ref=\"8\" fk-ref=\"9\"/><relation name=\"marktable_userid_fkey\" fq-name=\"public.marktable.marktable_userid_fkey\" type=\"fk\" pk-ref=\"9\" fk-ref=\"1\"/><relation name=\"posttable_creatorid_fkey\" fq-name=\"public.posttable.posttable_creatorid_fkey\" type=\"fk\" pk-ref=\"9\" fk-ref=\"3\"/><relation name=\"teamtable_userid_fkey\" fq-name=\"public.teamtable.teamtable_userid_fkey\" type=\"fk\" pk-ref=\"9\" fk-ref=\"6\"/><relation name=\"userachievementstable_id_fkey\" fq-name=\"public.userachievementstable.userachievementstable_id_fkey\" type=\"fk\" pk-ref=\"9\" fk-ref=\"7\"/><relation name=\"usertotagtable_userid_fkey\" fq-name=\"public.usertotagtable.usertotagtable_userid_fkey\" type=\"fk\" pk-ref=\"9\" fk-ref=\"10\"/></relations></diagram>"
+            }
+          },
+          ":usertotagtable": {
+            "constraints": {
+              "usertotagtable_VK": {
+                "type": "vpk",
+                "attributes": [
+                  "userid"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "connection-types": {
+    "dev": {
+      "name": "Разработка",
+      "color": "255,255,255",
+      "description": "База данных для разработки",
+      "auto-commit": true,
+      "confirm-execute": false,
+      "confirm-data-change": false,
+      "auto-close-transactions": false
+    }
+  }
 }

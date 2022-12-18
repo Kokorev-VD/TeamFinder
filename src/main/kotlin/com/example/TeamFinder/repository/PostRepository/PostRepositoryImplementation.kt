@@ -1,12 +1,14 @@
-package com.example.TeamFinder.repository
+package com.example.TeamFinder.repository.PostRepository
 
-import com.example.TeamFinder.model.PostModel
+import com.example.TeamFinder.model.Post.PostModel
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 
 @Component
+@Repository
 class PostRepositoryImplementation(
     private val jdbcTemplate: NamedParameterJdbcTemplate
 ) : PostRepository {
@@ -41,16 +43,14 @@ class PostRepositoryImplementation(
     override fun create(creator: Int, header: String, body: String): Int {
         val lastIdPostModel = findLastId()?.id ?: -1
         jdbcTemplate.update(
-            "insert into postTable (id, creator, header, body, pos_mark, neg_mark) " +
-                    "values (:id, :creator, :header, :body, :pos_mark, :neg_mark)",
+            "insert into postTable (id, creator, header, body) " +
+                    "values (:id, :creator, :header, :body)",
             MapSqlParameterSource(
                 mapOf(
                     "id" to lastIdPostModel + 1,
                     "creator" to creator,
                     "header" to header,
                     "body" to body,
-                    "pos_mark" to 0,
-                    "neg_mark" to 0,
                 )
             ),
         )
@@ -62,32 +62,20 @@ class PostRepositoryImplementation(
             return 200
         }
         jdbcTemplate.update(
-            "update postTable set creator = :creator, header = :header, body = :body, pos_mark = :pos_mark," +
-                    "neg_mark = :neg_mark where id = :id",
+            "update postTable set creator = :creator, header = :header, body = :body," +
+                    " where id = :id",
             MapSqlParameterSource(
                 mapOf(
                     "id" to id,
-                    "creator" to newPost.creator,
-                    "header" to newPost.header,
+                    "creator" to newPost.creatorId,
+                    "header" to newPost.title,
                     "body" to newPost.body,
-                    "pos_mark" to newPost.pos_mark,
-                    "neg_mark" to newPost.neg_mark,
                 )
             ),
         )
         return 100
     }
 
-
-    override fun markUpdate(id: Int, markChange: Int, markType: String) {
-        jdbcTemplate.update(
-            "update postTable set ${markType}_mark = :newMark where id = :id",
-            mapOf(
-                "newMark" to if (markType == "pos") findById(id)!!.pos_mark + markChange else findById(id)!!.pos_mark + markChange,
-                "id" to id,
-            )
-        )
-    }
 
 
     override fun deleteById(id: Int): Int {
@@ -107,11 +95,9 @@ class PostRepositoryImplementation(
         val ROW_MAPPER = RowMapper<PostModel> { rs, _ ->
             PostModel(
                 id = rs.getInt("id"),
-                creator = rs.getInt("creator"),
-                header = rs.getString("header"),
+                creatorId = rs.getInt("creator"),
+                title = rs.getString("header"),
                 body = rs.getString("body"),
-                pos_mark = rs.getInt("pos_mark"),
-                neg_mark = rs.getInt("neg_mark"),
             )
         }
     }
