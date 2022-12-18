@@ -23,7 +23,7 @@ class UserLoginParamsRepositoryImplementation(
 
     override fun getLastId(): Int =
         jdbcTemplate.query(
-            "select * from userTable where id = (select max(id) from userTable)",
+            "select * from userLoginParamsTable where id = (select max(id) from userLoginParamsTable)",
             ROW_MAPPER
         ).first().id
 
@@ -37,16 +37,17 @@ class UserLoginParamsRepositoryImplementation(
             ROW_MAPPER
         ).firstOrNull()
 
-    override fun create(userLoginParamsModel: UserLoginParamsModel) {
+    override fun create(login: String, pass: String): Int {
         val id = getLastId() + 1
         jdbcTemplate.update(
             "insert into UserLoginParamsTable (id, login, pass) values (:id, :login, :pass)",
             mapOf(
                 "id" to id,
-                "login" to userLoginParamsModel.login,
-                "pass" to userLoginParamsModel.pass,
+                "login" to login,
+                "pass" to pass,
             )
         )
+        return id
     }
 
     private companion object {

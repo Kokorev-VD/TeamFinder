@@ -24,39 +24,36 @@ class UserRepositoryImplementation(
             ROW_MAPPER
         ).first()
 
-    override fun create(
-        tg: String,
-        description: String,
-        imageId: Int,
-    ): Int {
-        val lastIdUserModel = userLoginParamsRepository.getLastId() + 1
+    override fun create(id: Int, tg: String, description: String, imageId: Int) {
         jdbcTemplate.update(
             "insert into userTable (id, tg, description, imageId)" +
                     " values (:id, :tg, :description, :imageId)",
             MapSqlParameterSource(
                 mapOf(
-                    "id" to lastIdUserModel,
+                    "id" to id,
                     "tg" to tg,
                     "description" to description,
                     "imageId" to imageId,
                 )
             ),
         )
-        return lastIdUserModel
     }
 
 
     override fun update(id: Int, tg: String, description: String, imageId: Int) {
+        delete(id)
+        create(id, tg, description, imageId)
+    }
+
+    override fun delete(id: Int) {
         jdbcTemplate.update(
-            "update userTable set tg = :tg, description = :description, imageId = :imageId where id = :id",
+            "delete from userTable where id = :id",
             mapOf(
-                "tg" to tg,
-                "description" to description,
-                "imageId" to imageId,
                 "id" to id,
             )
         )
     }
+
 
     private companion object {
         val ROW_MAPPER = RowMapper<UserModel> { rs, _ ->

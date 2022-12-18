@@ -23,6 +23,14 @@ class TagToPostRepositoryImplementation(
             ROW_MAPPER
         )
 
+    override fun getListTagsByPostId(postId: Int): List<String> {
+        val res = mutableListOf<String>()
+        for (i in getTagsByPostId(postId)) {
+            res.add(tagRepository.getById(i.tagId).title)
+        }
+        return res.toList()
+    }
+
     override fun setTagByPostIdAndTagTitle(postId: Int, tagTitle: String) {
         val tagId = tagRepository.getByTitile(tagTitle).id
         jdbcTemplate.update(

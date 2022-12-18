@@ -14,14 +14,14 @@ class PostRepositoryImplementation(
 ) : PostRepository {
 
 
-    override fun findById(id: Int): PostModel? =
+    override fun findById(id: Int): PostModel =
         jdbcTemplate.query(
             "select * from postTable where id = :id",
             mapOf(
                 "id" to id,
             ),
             ROW_MAPPER
-        ).firstOrNull()
+        ).first()
 
     override fun findByCreator(creator: Int): List<PostModel> {
         return jdbcTemplate.query(
@@ -58,9 +58,6 @@ class PostRepositoryImplementation(
     }
 
     override fun update(id: Int, newPost: PostModel): Int {
-        if (findById(id) == null) {
-            return 200
-        }
         jdbcTemplate.update(
             "update postTable set creator = :creator, header = :header, body = :body," +
                     " where id = :id",
@@ -79,9 +76,6 @@ class PostRepositoryImplementation(
 
 
     override fun deleteById(id: Int): Int {
-        if (findById(id) == null) {
-            return 200
-        }
         jdbcTemplate.update(
             "delete from postTable where id = :id",
             mapOf(
@@ -95,8 +89,8 @@ class PostRepositoryImplementation(
         val ROW_MAPPER = RowMapper<PostModel> { rs, _ ->
             PostModel(
                 id = rs.getInt("id"),
-                creatorId = rs.getInt("creator"),
-                title = rs.getString("header"),
+                creatorId = rs.getInt("creatorId"),
+                title = rs.getString("title"),
                 body = rs.getString("body"),
             )
         }

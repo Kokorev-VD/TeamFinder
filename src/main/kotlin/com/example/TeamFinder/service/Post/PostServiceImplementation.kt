@@ -1,23 +1,48 @@
 package com.example.TeamFinder.service.Post
 
+import com.example.TeamFinder.dto.Post.Post
+import com.example.TeamFinder.dto.User.UserProfile
+import com.example.TeamFinder.repository.MarkRepository.MarkRepository
 import com.example.TeamFinder.repository.PostRepository.PostRepository
+import com.example.TeamFinder.repository.PostRepository.PostToPostRepository
+import com.example.TeamFinder.repository.TagToPostRepository.TagToPostRepository
+import com.example.TeamFinder.repository.TeamRepository.TeamRepository
+import com.example.TeamFinder.repository.UserRepository.UserLoginParamsRepository
+import com.example.TeamFinder.service.User.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class PostServiceImplementation (
-    @Autowired private val postRepository: PostRepository
-): PostService {
-//
-//    override fun getById(id: Int): Post =
-//        postRepository.findById(id)?.toDto() ?: Post(
-//            id = -2,
-//            creatorId = -1,
-//            title = "",
-//            body = "",
-//            pos_mark = 0,
-//            neg_mark = 0,
-//        )
+class PostServiceImplementation(
+    @Autowired private val postRepository: PostRepository,
+    @Autowired private val userLoginParamsRepository: UserLoginParamsRepository,
+    @Autowired private val teamRepository: TeamRepository,
+    @Autowired private val markRepository: MarkRepository,
+    @Autowired private val tagToPostRepository: TagToPostRepository,
+    @Autowired private val userService: UserService,
+    @Autowired private val postToPostRepository: PostToPostRepository,
+) : PostService {
+
+    override fun getById(id: Int): Post {
+        val thisPost = postRepository.findById(id)
+        val teamUserId = teamRepository.getByPostId(id)
+        val team = mutableListOf<UserProfile>()
+        for (i in teamUserId) {
+            team.add(userService.getById(i.userId))
+        }
+        return Post(
+            title = thisPost.title,
+            creatorLogin = userLoginParamsRepository.getById(thisPost.creatorId).login,
+            body = thisPost.body,
+            team = team,
+            posMark = markRepository.getPosMarksByPostId(id),
+            negMark = markRepository.getNegMarksByPostId(id),
+            tagList = tagToPostRepository.getListTagsByPostId(id),
+            derivedPosts = postToPostRepository.getDerivedListMainInfoPost(id),
+            basedPosts = postToPostRepository.getBasedListMainInfoPost(id),
+        )
+    }
+
 //
 //    override fun markUpdate(id: Int, markChange: Int, markType: String) {
 //        postRepository.markUpdate(id, markChange, markType)

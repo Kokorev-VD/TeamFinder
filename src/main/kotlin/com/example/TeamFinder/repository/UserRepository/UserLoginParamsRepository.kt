@@ -10,5 +10,5 @@ interface UserLoginParamsRepository {
 
     fun getByLogin(login: String): UserLoginParamsModel?
 
-    fun create(userLoginParamsModel: UserLoginParamsModel)
+    fun create(login: String, pass: String): Int
 }

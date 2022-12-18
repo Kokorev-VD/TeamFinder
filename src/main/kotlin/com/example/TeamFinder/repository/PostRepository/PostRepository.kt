@@ -4,7 +4,7 @@ import com.example.TeamFinder.model.Post.PostModel
 
 interface PostRepository {
 
-    fun findById(id: Int): PostModel?
+    fun findById(id: Int): PostModel
 
     fun findByCreator(creator: Int): List<PostModel>
 

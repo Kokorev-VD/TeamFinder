@@ -12,21 +12,21 @@ class TeamRepositoryImplementation(
     val jdbcTemplate: NamedParameterJdbcTemplate,
 ) : TeamRepository {
 
-    override fun setByUserIdAndPostId(userId: Int, postId: Int) {
+    override fun setByUserIdAndPostId(userId: Int, teamId: Int) {
         jdbcTemplate.update(
-            "insert into TeamTable (userId, postId) values (:userId, :postId)",
+            "insert into TeamTable (userId, teamId) values (:userId, :teamId)",
             mapOf(
                 "userId" to userId,
-                "postId" to postId,
+                "teamId" to teamId,
             )
         )
     }
 
-    override fun getByPostId(postId: Int): List<TeamModel> =
+    override fun getByPostId(teamId: Int): List<TeamModel> =
         jdbcTemplate.query(
-            "select * from TeamTable where postId = :postId",
+            "select * from TeamTable where teamId = :teamId",
             mapOf(
-                "postId" to postId
+                "teamId" to teamId
             ),
             ROW_MAPPER
         )

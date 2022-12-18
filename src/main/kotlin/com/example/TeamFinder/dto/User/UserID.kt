@@ -1,6 +1,5 @@
 package com.example.TeamFinder.dto.User
 
-data class UserTag(
+data class UserID(
     val id: Int,
-    val tag: List<String>,
 )

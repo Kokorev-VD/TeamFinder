@@ -1,8 +1,10 @@
 package com.example.TeamFinder.service.Post
 
+import com.example.TeamFinder.dto.Post.Post
+
 interface PostService {
 
-//    fun getById(id: Int): Post
+    fun getById(id: Int): Post
 //
 //    fun getByCreator(creator: Int): List<Post>
 //

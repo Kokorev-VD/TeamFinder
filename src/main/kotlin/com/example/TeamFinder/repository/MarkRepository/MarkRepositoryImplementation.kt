@@ -4,7 +4,11 @@ import com.example.TeamFinder.model.Mark.MarkModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 
+@Component
+@Repository
 class MarkRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
 ) : MarkRepository {
