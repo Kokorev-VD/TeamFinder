@@ -25,7 +25,7 @@ class PostServiceImplementation(
 
     override fun getById(id: Int): Post {
         val thisPost = postRepository.findById(id)
-        val teamUserId = teamRepository.getByPostId(id)
+        val teamUserId = teamRepository.getByTeamId(id)
         val team = mutableListOf<UserProfile>()
         for (i in teamUserId) {
             team.add(userService.getById(i.userId))
@@ -43,11 +43,15 @@ class PostServiceImplementation(
         )
     }
 
-//
-//    override fun markUpdate(id: Int, markChange: Int, markType: String) {
-//        postRepository.markUpdate(id, markChange, markType)
-//    }
-//
+
+    override fun markUpdate(postId: Int, userId: Int, markType: Int) {
+        if (markType == 0) {
+            markRepository.deleteByPostIdAndUserId(postId, userId)
+        } else {
+            markRepository.update(postId, userId, markType)
+        }
+    }
+
 //    override fun getByCreator(creator: Int): List<Post> =
 //        postRepository.findByCreator(creator).map { it.toDto() }
 //

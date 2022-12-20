@@ -3,6 +3,7 @@ package com.example.TeamFinder.controller
 import com.example.TeamFinder.dto.Response.Response
 import com.example.TeamFinder.dto.User.UserAchievement
 import com.example.TeamFinder.dto.User.UserTag
+import com.example.TeamFinder.model.Mark.MarkModel
 import com.example.TeamFinder.model.User.UserLoginParamsModel
 import com.example.TeamFinder.model.User.UserModel
 import com.example.TeamFinder.service.Post.PostService
@@ -50,6 +51,11 @@ class Controller(
     @GetMapping("/post/{id}")
     fun getPostById(@PathVariable id: Int) =
         postService.getById(id)
+
+    @PutMapping("/post/updateMark")
+    fun updateMArk(@RequestBody markModel: MarkModel) {
+        postService.markUpdate(markModel.postId, markModel.userId, markModel.markType)
+    }
 //
 //    @GetMapping("/post/creator")
 //    fun getPostByCreator(@RequestBody creator: Int): List<Post> =

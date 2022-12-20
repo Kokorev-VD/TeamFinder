@@ -5,6 +5,7 @@ import com.example.TeamFinder.dto.User.UserID
 import com.example.TeamFinder.dto.User.UserProfile
 import com.example.TeamFinder.model.User.UserLoginParamsModel
 import com.example.TeamFinder.model.User.UserModel
+import com.example.TeamFinder.repository.MarkRepository.MarkRepository
 import com.example.TeamFinder.repository.TagToUserRepository.TagToUserRepository
 import com.example.TeamFinder.repository.UserRepository.UserAchievementsRepository
 import com.example.TeamFinder.repository.UserRepository.UserLoginParamsRepository
@@ -19,6 +20,7 @@ class UserServiceImplementation(
     @Autowired private val userLoginParamsRepository: UserLoginParamsRepository,
     @Autowired private val userAchievementsRepository: UserAchievementsRepository,
     @Autowired private val tagToUserRepository: TagToUserRepository,
+    @Autowired private val markRepository: MarkRepository,
 ): UserService {
     override fun getById(id: Int): UserProfile {
         val user = userRepository.findById(id)
@@ -33,6 +35,7 @@ class UserServiceImplementation(
             imageId = user.imageId,
             achievements = userAchievements,
             tags = tagToUserRepository.getStringTagsByUserId(id).tag,
+            marks = markRepository.getMarkWithStringPostByUserId(id)
         )
     }
 

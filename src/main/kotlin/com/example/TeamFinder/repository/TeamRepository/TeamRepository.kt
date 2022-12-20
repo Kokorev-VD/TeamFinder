@@ -4,10 +4,11 @@ import com.example.TeamFinder.model.Team.TeamModel
 
 interface TeamRepository {
 
-    fun setByUserIdAndPostId(userId: Int, postId: Int)
+    fun setByUserIdAndTeamId(userId: Int, teamId: Int)
 
-    fun getByPostId(postId: Int): List<TeamModel>
+    fun getByTeamId(teamId: Int): List<TeamModel>
 
     fun getByUserId(userId: Int): List<TeamModel>
 
+    fun removeFromTeamByUserIdAndTeamId(userId: Int, teamId: Int)
 }

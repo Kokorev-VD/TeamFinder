@@ -12,7 +12,7 @@ class TeamRepositoryImplementation(
     val jdbcTemplate: NamedParameterJdbcTemplate,
 ) : TeamRepository {
 
-    override fun setByUserIdAndPostId(userId: Int, teamId: Int) {
+    override fun setByUserIdAndTeamId(userId: Int, teamId: Int) {
         jdbcTemplate.update(
             "insert into TeamTable (userId, teamId) values (:userId, :teamId)",
             mapOf(
@@ -22,7 +22,7 @@ class TeamRepositoryImplementation(
         )
     }
 
-    override fun getByPostId(teamId: Int): List<TeamModel> =
+    override fun getByTeamId(teamId: Int): List<TeamModel> =
         jdbcTemplate.query(
             "select * from TeamTable where teamId = :teamId",
             mapOf(
@@ -39,6 +39,16 @@ class TeamRepositoryImplementation(
             ),
             ROW_MAPPER
         )
+
+    override fun removeFromTeamByUserIdAndTeamId(userId: Int, teamId: Int) {
+        jdbcTemplate.update(
+            "delete from TeamTable where userId = :userId and teamId = :teamId",
+            mapOf(
+                "userId" to userId,
+                "teamId" to teamId,
+            )
+        )
+    }
 
 
     companion object {
