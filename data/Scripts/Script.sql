@@ -12,10 +12,23 @@ imageId int,
 foreign key (id) references userloginparamstable (id)
 )
 
-create table UserAchievementsTable(
-id int,
-achievement text,
-foreign key (id) references usertable (id)
+create table AchievementTable(
+id int unique,
+achievement text
+)
+
+create table usertoachievementtable(
+achievementId int,
+userId int,
+foreign key (achievementId) references achievementTable(id),
+foreign key (userId) references usertable(id)
+)
+
+create table userCreatorToPostTable(
+userId int,
+postId int,
+foreign key (userId) references usertable (id),
+foreign key (postId) references postTable (id)
 )
 
 create table PostTable(
@@ -53,7 +66,7 @@ foreign key (tagId) references tagtable (id),
 foreign key (userId) references usertable (id)
 )
 
-create tabl e TagToPostTable(
+create table TagToPostTable(
 tagId int,
 postId int,
 foreign key (tagId) references tagtable (id),
@@ -67,9 +80,62 @@ foreign key (teamId) references posttable (id),
 foreign key (userId) references usertable (id)
 )
 
+create table CityTable(
+id int unique,
+name text
+)
+
+create table CityToUserTable(
+cityId int,
+userId int,
+foreign key (cityId) references citytable(id),
+foreign key (userId) references usertable(id)
+)
+
+create table JobTable(
+id int unique,
+name text
+)
+
+
+create table JobToUserTable(
+jobId int,
+userId int,
+foreign key (jobId) references jobtable(id),
+foreign key (userId) references usertable(id)
+)
+
+create table AchievementToTagTable(
+achievementId int,
+tagId int,
+foreign key (achievementId) references achievementtable (id),
+foreign key (tagId) references tagtable (id)
+) 
+
+drop table achievementtypetotagtable 
+
+insert into usercreatortoposttable values(1, 1)
+
+alter table posttable drop column creatorId
+
+create table achievementTypeTable(
+id int unique,
+value int,
+name text
+)
+
+
+
+create table achievementToTypeTable(
+achievementId int,
+typeId int,
+foreign key (achievementId) references achievementTable(id),
+foreign key (typeId) references achievementTypeTable(id)
+)
+
 drop table usertable 
 
-drop table userachivementstable 
+drop table userachievem entstable 
 
 drop table posttable 
 
@@ -81,9 +147,29 @@ drop table posttotagtable
 
 drop table teamtable 
 
-insert into userloginparamstable values(0, 'Vitya', '1234')
+select * from teamtable
+
+insert into userloginparamstable values(0, 'Denis', '1234')
 
 insert into userTable values(0, '@shlepa05', 'Hi! My name is Vitya and i am interested in Kotlin', 0)
+
+insert into posttable values(1, 0, 'TestPost2', 'A')
+
+insert into tagtoposttable values(1, 0)
+
+delete from tagtoposttable where tagid = 1
+
+
+
+insert into teamtable values(0, 0)
+
+insert into postextensiontable values(0, 1)
+
+insert into marktable values(1, 0, -1)
+
+select * from posttable
+
+delete from teamtable where userid = 0
 
 insert into tagtable values(0, 'Kotlin')
 

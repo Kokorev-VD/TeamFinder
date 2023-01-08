@@ -64,7 +64,6 @@ class PostRepositoryImplementation(
             MapSqlParameterSource(
                 mapOf(
                     "id" to id,
-                    "creator" to newPost.creatorId,
                     "header" to newPost.title,
                     "body" to newPost.body,
                 )
@@ -89,7 +88,6 @@ class PostRepositoryImplementation(
         val ROW_MAPPER = RowMapper<PostModel> { rs, _ ->
             PostModel(
                 id = rs.getInt("id"),
-                creatorId = rs.getInt("creatorId"),
                 title = rs.getString("title"),
                 body = rs.getString("body"),
             )

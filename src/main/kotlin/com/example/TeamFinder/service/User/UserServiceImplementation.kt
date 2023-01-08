@@ -7,7 +7,8 @@ import com.example.TeamFinder.model.User.UserLoginParamsModel
 import com.example.TeamFinder.model.User.UserModel
 import com.example.TeamFinder.repository.MarkRepository.MarkRepository
 import com.example.TeamFinder.repository.TagToUserRepository.TagToUserRepository
-import com.example.TeamFinder.repository.UserRepository.UserAchievementsRepository
+import com.example.TeamFinder.repository.TeamRepository.TeamRepository
+import com.example.TeamFinder.repository.UserCreatorToPostRepository.UserCreatorToPostRepository
 import com.example.TeamFinder.repository.UserRepository.UserLoginParamsRepository
 import com.example.TeamFinder.repository.UserRepository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,16 +19,15 @@ import org.springframework.stereotype.Service
 class UserServiceImplementation(
     @Autowired private val userRepository: UserRepository,
     @Autowired private val userLoginParamsRepository: UserLoginParamsRepository,
-    @Autowired private val userAchievementsRepository: UserAchievementsRepository,
     @Autowired private val tagToUserRepository: TagToUserRepository,
     @Autowired private val markRepository: MarkRepository,
+    @Autowired private val userCreatorToPostRepository: UserCreatorToPostRepository,
+    @Autowired private val teamRepository: TeamRepository,
 ): UserService {
     override fun getById(id: Int): UserProfile {
         val user = userRepository.findById(id)
         val userAchievements = mutableListOf<String>()
-        for (i in userAchievementsRepository.getByUserId(id)) {
-            userAchievements.add(i.achievement)
-        }
+
         return UserProfile(
             login = userLoginParamsRepository.getById(id).login,
             tg = user.tg,
@@ -35,7 +35,9 @@ class UserServiceImplementation(
             imageId = user.imageId,
             achievements = userAchievements,
             tags = tagToUserRepository.getStringTagsByUserId(id).tag,
-            marks = markRepository.getMarkWithStringPostByUserId(id)
+            marks = markRepository.getMarkWithStringPostByUserId(id),
+            createdPostId = listOf(userCreatorToPostRepository.getUserCreatorToPostModelByUserId(id).postId),
+            teamId = teamRepository.getByUserId(id)
         )
     }
 
@@ -48,9 +50,6 @@ class UserServiceImplementation(
         tagToUserRepository.update(id, tag)
     }
 
-    override fun updateUserAchievement(id: Int, achievement: List<String>) {
-        userAchievementsRepository.update(id, achievement)
-    }
 
     override fun authorisation(userLoginParams: UserLoginParamsModel): Response {
         val dataBaseUserLoginParamsModel =

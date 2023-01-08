@@ -7,6 +7,7 @@ import com.example.TeamFinder.repository.PostRepository.PostRepository
 import com.example.TeamFinder.repository.PostRepository.PostToPostRepository
 import com.example.TeamFinder.repository.TagToPostRepository.TagToPostRepository
 import com.example.TeamFinder.repository.TeamRepository.TeamRepository
+import com.example.TeamFinder.repository.UserCreatorToPostRepository.UserCreatorToPostRepository
 import com.example.TeamFinder.repository.UserRepository.UserLoginParamsRepository
 import com.example.TeamFinder.service.User.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +22,7 @@ class PostServiceImplementation(
     @Autowired private val tagToPostRepository: TagToPostRepository,
     @Autowired private val userService: UserService,
     @Autowired private val postToPostRepository: PostToPostRepository,
+    @Autowired private val userCreatorToPostRepository: UserCreatorToPostRepository,
 ) : PostService {
 
     override fun getById(id: Int): Post {
@@ -32,7 +34,11 @@ class PostServiceImplementation(
         }
         return Post(
             title = thisPost.title,
-            creatorLogin = userLoginParamsRepository.getById(thisPost.creatorId).login,
+            creatorLogin = userLoginParamsRepository.getById(
+                userCreatorToPostRepository.getUserCreatorToPostModelByPostId(
+                    id
+                ).userId
+            ).login,
             body = thisPost.body,
             team = team,
             posMark = markRepository.getPosMarksByPostId(id),

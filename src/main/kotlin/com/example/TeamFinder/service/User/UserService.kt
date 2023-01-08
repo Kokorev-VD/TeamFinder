@@ -14,8 +14,6 @@ interface UserService {
 
     fun updateUserTag(id: Int, tag: List<String>)
 
-    fun updateUserAchievement(id: Int, achievement: List<String>)
-
     fun authorisation(userLoginParams: UserLoginParamsModel): Response
 
     fun registration(login: String, pass: String): Any

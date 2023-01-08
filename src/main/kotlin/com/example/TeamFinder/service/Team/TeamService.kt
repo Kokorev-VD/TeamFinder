@@ -1,6 +1,7 @@
 package com.example.TeamFinder.service.Team
 
 import com.example.TeamFinder.dto.User.UserProfile
+import com.example.TeamFinder.model.Team.TeamModel
 
 interface TeamService {
 
@@ -12,6 +13,6 @@ interface TeamService {
 
     fun readTeamByPostId(postId: Int): List<UserProfile>
 
-    fun readTeamByUserId(userId: Int): List<UserProfile>
+    fun readTeamByUserId(userId: Int): List<TeamModel>
 
 }

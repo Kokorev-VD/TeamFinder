@@ -1,12 +1,17 @@
 package com.example.TeamFinder.service.Team
 
 import com.example.TeamFinder.dto.User.UserProfile
+import com.example.TeamFinder.model.Team.TeamModel
 import com.example.TeamFinder.repository.TeamRepository.TeamRepository
 import com.example.TeamFinder.repository.UserRepository.UserLoginParamsRepository
 import com.example.TeamFinder.service.Post.PostService
 import com.example.TeamFinder.service.User.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
+@Component
+@Service
 class TeamServiceImplementation(
     @Autowired private val teamRepository: TeamRepository,
     @Autowired private val userLoginParamsRepository: UserLoginParamsRepository,
@@ -37,13 +42,6 @@ class TeamServiceImplementation(
         return res
     }
 
-    override fun readTeamByUserId(userId: Int): List<UserProfile> {
-        val list = teamRepository.getByUserId(userId)
-        val res = mutableListOf<UserProfile>()
-        for (i in list) {
-            res.add(userService.getById(i.userId))
-        }
-        return res
-    }
-
+    override fun readTeamByUserId(userId: Int): List<TeamModel> =
+        teamRepository.getByUserId(userId)
 }
