@@ -4,25 +4,27 @@ import com.example.TeamFinder.model.Achievement.AchievementToUserModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Repository
 
+@Repository
 class AchievementToUserRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
 ) : AchievementToUserRepository {
 
-    override fun getByUserId(userId: Int): AchievementToUserModel =
+    override fun getByUserId(userId: Int): List<AchievementToUserModel> =
         jdbcTemplate.query(
-            "select * from AchievementToUserTable where userId = :userId",
+            "select * from userToAchievementTable where userId = :userId",
             mapOf(
                 "userId" to userId,
             ),
             ROW_MAPPER
-        ).first()
+        )
 
-    override fun setByAchievementIdAndUserId(achiementId: Int, userId: Int) {
+    override fun setByAchievementIdAndUserId(achievementId: Int, userId: Int) {
         jdbcTemplate.update(
-            "insert into AchievementToUserTable (achievementId, userId) values (:achievementId, :userId)",
+            "insert into userToAchievementTable (achievementId, userId) values (:achievementId, :userId)",
             mapOf(
-                "achievementId" to achiementId,
+                "achievementId" to achievementId,
                 "userId" to userId,
             ),
         )

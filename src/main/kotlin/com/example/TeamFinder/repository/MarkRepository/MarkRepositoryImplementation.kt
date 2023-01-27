@@ -1,6 +1,6 @@
 package com.example.TeamFinder.repository.MarkRepository
 
-import com.example.TeamFinder.dto.Mark.MarkWithStringPost
+import com.example.TeamFinder.dto.Mark.MarkWithPost
 import com.example.TeamFinder.model.Mark.MarkModel
 import com.example.TeamFinder.repository.PostRepository.PostRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,7 +44,7 @@ class MarkRepositoryImplementation(
         )
     }
 
-    override fun getMarkWithStringPostByUserId(userId: Int): List<MarkWithStringPost> {
+    override fun getMarkWithStringPostByUserId(userId: Int): List<MarkWithPost> {
         val marksList = jdbcTemplate.query(
             "select * from MarkTable where userId = :userId",
             mapOf(
@@ -52,9 +52,9 @@ class MarkRepositoryImplementation(
             ),
             ROW_MAPPER
         )
-        val resList = mutableListOf<MarkWithStringPost>()
+        val resList = mutableListOf<MarkWithPost>()
         for (i in marksList) {
-            resList.add(MarkWithStringPost(i.postId, postRepository.findById(i.postId).title, i.markType))
+            resList.add(MarkWithPost(i.postId, i.markType))
         }
         return resList
     }
@@ -65,6 +65,15 @@ class MarkRepositoryImplementation(
             mapOf(
                 "postId" to postId,
                 "userId" to userId,
+            )
+        )
+    }
+
+    override fun deleteByPostId(postId: Int) {
+        jdbcTemplate.update(
+            "delete from MarkTable where postId = :postId",
+            mapOf(
+                "postId" to postId,
             )
         )
     }

@@ -4,8 +4,8 @@ import com.example.TeamFinder.model.Achievement.AchievementToUserModel
 
 interface AchievementToUserRepository {
 
-    fun getByUserId(userId: Int): AchievementToUserModel
+    fun getByUserId(userId: Int): List<AchievementToUserModel>
 
-    fun setByAchievementIdAndUserId(achiementId: Int, userId: Int)
+    fun setByAchievementIdAndUserId(achievementId: Int, userId: Int)
 
 }

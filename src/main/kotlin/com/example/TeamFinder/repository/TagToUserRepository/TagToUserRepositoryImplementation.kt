@@ -1,6 +1,5 @@
 package com.example.TeamFinder.repository.TagToUserRepository
 
-import com.example.TeamFinder.dto.User.UserTag
 import com.example.TeamFinder.model.TagToUser.TagToUserModel
 import com.example.TeamFinder.repository.TagRepository.TagRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,12 +14,12 @@ class TagToUserRepositoryImplementation(
     private val jdbcTemplate: NamedParameterJdbcTemplate,
     @Autowired private val tagRepository: TagRepository,
 ) : TagToUserRepository {
-    override fun getStringTagsByUserId(userId: Int): UserTag {
+    override fun getStringTagsByUserId(userId: Int): List<String> {
         val res: MutableList<String> = mutableListOf()
         for (i in getTagsByUserId(userId)) {
             res.add(tagRepository.getById(i.tagId).title)
         }
-        return UserTag(userId, res)
+        return res
     }
 
     override fun getTagsByUserId(userId: Int): List<TagToUserModel> =

@@ -1,7 +1,6 @@
 package com.example.TeamFinder.dto.Mark
 
-data class MarkWithStringPost(
+data class MarkWithPost(
     val postId: Int,
-    val postTitle: String,
     val markType: Int,
 )

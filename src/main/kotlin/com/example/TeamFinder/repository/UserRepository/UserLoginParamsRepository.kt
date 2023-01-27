@@ -8,6 +8,8 @@ interface UserLoginParamsRepository {
 
     fun getLastId(): Int
 
+    fun getAllUserLoginParams(): List<UserLoginParamsModel>
+
     fun getByLogin(login: String): UserLoginParamsModel?
 
     fun create(login: String, pass: String): Int

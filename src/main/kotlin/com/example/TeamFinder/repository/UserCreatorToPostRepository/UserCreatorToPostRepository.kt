@@ -6,7 +6,9 @@ interface UserCreatorToPostRepository {
 
     fun setUserCreatorIdToPost(userId: Int, postId: Int)
 
-    fun getUserCreatorToPostModelByUserId(userId: Int): UserCreatorToPostModel
+    fun getUserCreatorToPostModelByUserId(userId: Int): List<UserCreatorToPostModel>
 
     fun getUserCreatorToPostModelByPostId(postId: Int): UserCreatorToPostModel
+
+    fun deleteByPostId(postId: Int)
 }

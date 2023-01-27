@@ -50,6 +50,15 @@ class TeamRepositoryImplementation(
         )
     }
 
+    override fun deleteTeamByPostId(postId: Int) {
+        jdbcTemplate.update(
+            "delete from TeamTable where postId = :postId",
+            mapOf(
+                "postId" to postId,
+            )
+        )
+    }
+
 
     companion object {
         val ROW_MAPPER = RowMapper<TeamModel> { it, _ ->

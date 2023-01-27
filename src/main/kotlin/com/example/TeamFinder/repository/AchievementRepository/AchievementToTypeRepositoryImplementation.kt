@@ -4,7 +4,9 @@ import com.example.TeamFinder.model.Achievement.AchievementToTypeModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Repository
 
+@Repository
 class AchievementToTypeRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
 ) : AchievementToTypeRepository {

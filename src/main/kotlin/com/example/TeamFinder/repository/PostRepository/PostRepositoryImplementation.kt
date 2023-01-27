@@ -12,6 +12,11 @@ import org.springframework.stereotype.Repository
 class PostRepositoryImplementation(
     private val jdbcTemplate: NamedParameterJdbcTemplate
 ) : PostRepository {
+    override fun getAllPost(): List<PostModel> =
+        jdbcTemplate.query(
+            "select * from postTable",
+            ROW_MAPPER,
+        )
 
 
     override fun findById(id: Int): PostModel =
@@ -40,16 +45,15 @@ class PostRepositoryImplementation(
             ROW_MAPPER
         ).firstOrNull()
 
-    override fun create(creator: Int, header: String, body: String): Int {
+    override fun create(title: String, body: String): Int {
         val lastIdPostModel = findLastId()?.id ?: -1
         jdbcTemplate.update(
-            "insert into postTable (id, creator, header, body) " +
-                    "values (:id, :creator, :header, :body)",
+            "insert into postTable (id, title, body) " +
+                    "values (:id ,:title, :body)",
             MapSqlParameterSource(
                 mapOf(
                     "id" to lastIdPostModel + 1,
-                    "creator" to creator,
-                    "header" to header,
+                    "title" to title,
                     "body" to body,
                 )
             ),
@@ -59,12 +63,12 @@ class PostRepositoryImplementation(
 
     override fun update(id: Int, newPost: PostModel): Int {
         jdbcTemplate.update(
-            "update postTable set creator = :creator, header = :header, body = :body," +
+            "update postTable set title = :title, body = :body," +
                     " where id = :id",
             MapSqlParameterSource(
                 mapOf(
                     "id" to id,
-                    "header" to newPost.title,
+                    "title" to newPost.title,
                     "body" to newPost.body,
                 )
             ),

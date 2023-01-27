@@ -1,7 +1,7 @@
-package com.example.TeamFinder.model.User
+package com.example.TeamFinder.dto.User
 
-data class UserModel(
-    val id: Int = 0,
+data class User(
+    val login: String = "",
     val tg: String = "",
     val description: String = "",
     val imageId: Int = 0,

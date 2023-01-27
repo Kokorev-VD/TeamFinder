@@ -23,14 +23,14 @@ class UserCreatorToPostRepositoryImplementation(
         )
     }
 
-    override fun getUserCreatorToPostModelByUserId(userId: Int): UserCreatorToPostModel =
+    override fun getUserCreatorToPostModelByUserId(userId: Int): List<UserCreatorToPostModel> =
         jdbcTemplate.query(
             "select * from UserCreatorToPostTable where userId = :userId",
             mapOf(
                 "userId" to userId,
             ),
             ROW_MAPPER,
-        ).first()
+        )
 
 
     override fun getUserCreatorToPostModelByPostId(postId: Int): UserCreatorToPostModel =
@@ -41,6 +41,15 @@ class UserCreatorToPostRepositoryImplementation(
             ),
             ROW_MAPPER,
         ).first()
+
+    override fun deleteByPostId(postId: Int) {
+        jdbcTemplate.update(
+            "delete from UserCreatorToPostTable where postId = :postId",
+            mapOf(
+                "postId" to postId
+            )
+        )
+    }
 
     companion object {
         val ROW_MAPPER = RowMapper<UserCreatorToPostModel> { rs, _ ->

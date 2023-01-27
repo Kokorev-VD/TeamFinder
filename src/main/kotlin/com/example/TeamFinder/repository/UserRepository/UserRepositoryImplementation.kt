@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository
 @Repository
 class UserRepositoryImplementation(
     private val jdbcTemplate: NamedParameterJdbcTemplate,
-    private val userLoginParamsRepository: UserLoginParamsRepository,
 ) : UserRepository {
 
 
@@ -24,25 +23,26 @@ class UserRepositoryImplementation(
             ROW_MAPPER
         ).first()
 
-    override fun create(id: Int, tg: String, description: String, imageId: Int) {
+    override fun create(id: Int, tg: String, description: String, imageId: Int, email: String) {
         jdbcTemplate.update(
-            "insert into userTable (id, tg, description, imageId)" +
-                    " values (:id, :tg, :description, :imageId)",
+            "insert into userTable (id, tg, description, imageId, email)" +
+                    " values (:id, :tg, :description, :imageId, :email)",
             MapSqlParameterSource(
                 mapOf(
                     "id" to id,
                     "tg" to tg,
                     "description" to description,
                     "imageId" to imageId,
+                    "email" to email,
                 )
             ),
         )
     }
 
 
-    override fun update(id: Int, tg: String, description: String, imageId: Int) {
+    override fun update(id: Int, tg: String, description: String, imageId: Int, email: String) {
         delete(id)
-        create(id, tg, description, imageId)
+        create(id, tg, description, imageId, email)
     }
 
     override fun delete(id: Int) {
@@ -54,7 +54,6 @@ class UserRepositoryImplementation(
         )
     }
 
-
     private companion object {
         val ROW_MAPPER = RowMapper<UserModel> { rs, _ ->
             UserModel(
@@ -62,6 +61,7 @@ class UserRepositoryImplementation(
                 tg = rs.getString("tg"),
                 description = rs.getString("description"),
                 imageId = rs.getInt("imageId"),
+                email = rs.getString("email"),
             )
         }
     }

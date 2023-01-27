@@ -12,4 +12,5 @@ interface TagToPostRepository {
 
     fun deleteByPostIdAndTagTitle(postId: Int, tagTitle: String)
 
+    fun deleteByPostId(postId: Int)
 }

@@ -4,7 +4,9 @@ import com.example.TeamFinder.model.Achievement.AchievementType.AchievementTypeM
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Repository
 
+@Repository
 class AchievementTypeRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
 ) : AchievementTypeRepository {
@@ -26,6 +28,12 @@ class AchievementTypeRepositoryImplementation(
             ),
             ROW_MAPPER
         ).first()
+
+    override fun getAll(): List<AchievementTypeModel> =
+        jdbcTemplate.query(
+            "select * from AchievementTypeTable",
+            ROW_MAPPER
+        )
 
     companion object {
         val ROW_MAPPER = RowMapper<AchievementTypeModel> { it, _ ->

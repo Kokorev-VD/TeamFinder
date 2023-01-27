@@ -5,7 +5,9 @@ import com.example.TeamFinder.repository.CityRepository.CityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Repository
 
+@Repository
 class CityToUserRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
     @Autowired val cityRepository: CityRepository,
@@ -38,6 +40,20 @@ class CityToUserRepositoryImplementation(
                 "userId" to userId,
             )
         )
+    }
+
+    override fun deleteByUserId(userId: Int) {
+        jdbcTemplate.update(
+            "delete from CityToUserTable where userId = :userId",
+            mapOf(
+                "userId" to userId
+            )
+        )
+    }
+
+    override fun update(userId: Int, cityName: String) {
+        deleteByUserId(userId)
+        createByCityNameAndUserId(cityName, userId)
     }
 
     companion object {

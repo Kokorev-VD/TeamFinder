@@ -1,10 +1,9 @@
 package com.example.TeamFinder.service.Team
 
-import com.example.TeamFinder.dto.User.UserProfile
-import com.example.TeamFinder.model.Team.TeamModel
+import com.example.TeamFinder.dto.User.User
 import com.example.TeamFinder.repository.TeamRepository.TeamRepository
+import com.example.TeamFinder.repository.UserCreatorToPostRepository.UserCreatorToPostRepository
 import com.example.TeamFinder.repository.UserRepository.UserLoginParamsRepository
-import com.example.TeamFinder.service.Post.PostService
 import com.example.TeamFinder.service.User.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -15,13 +14,13 @@ import org.springframework.stereotype.Service
 class TeamServiceImplementation(
     @Autowired private val teamRepository: TeamRepository,
     @Autowired private val userLoginParamsRepository: UserLoginParamsRepository,
-    @Autowired private val postService: PostService,
+    @Autowired private val userCreatorToPostRepository: UserCreatorToPostRepository,
     @Autowired private val userService: UserService,
 ) : TeamService {
 
-    override fun createTeam(teamId: Int) {
+    override fun createTeam(postId: Int) {
         teamRepository.setByUserIdAndTeamId(
-            userLoginParamsRepository.getByLogin(postService.getById(teamId).creatorLogin)!!.id, teamId
+            userCreatorToPostRepository.getUserCreatorToPostModelByPostId(postId).userId, postId
         )
     }
 
@@ -33,15 +32,12 @@ class TeamServiceImplementation(
         teamRepository.removeFromTeamByUserIdAndTeamId(userId, teamId)
     }
 
-    override fun readTeamByPostId(postId: Int): List<UserProfile> {
+    override fun readTeamByPostId(postId: Int): List<User> {
         val list = teamRepository.getByTeamId(postId)
-        val res = mutableListOf<UserProfile>()
+        val res = mutableListOf<User>()
         for (i in list) {
             res.add(userService.getById(i.userId))
         }
         return res
     }
-
-    override fun readTeamByUserId(userId: Int): List<TeamModel> =
-        teamRepository.getByUserId(userId)
 }

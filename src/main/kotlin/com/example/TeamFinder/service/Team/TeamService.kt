@@ -1,7 +1,6 @@
 package com.example.TeamFinder.service.Team
 
-import com.example.TeamFinder.dto.User.UserProfile
-import com.example.TeamFinder.model.Team.TeamModel
+import com.example.TeamFinder.dto.User.User
 
 interface TeamService {
 
@@ -11,8 +10,6 @@ interface TeamService {
 
     fun removeUserFromTeam(userId: Int, teamId: Int)
 
-    fun readTeamByPostId(postId: Int): List<UserProfile>
-
-    fun readTeamByUserId(userId: Int): List<TeamModel>
+    fun readTeamByPostId(postId: Int): List<User>
 
 }

@@ -8,4 +8,6 @@ interface AchievementTypeRepository {
 
     fun getByName(name: String): AchievementTypeModel
 
+    fun getAll(): List<AchievementTypeModel>
+
 }

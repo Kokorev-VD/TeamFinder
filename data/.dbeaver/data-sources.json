@@ -25,7 +25,8 @@
           "postgresql.dd.plain.string": "false",
           "postgresql.dd.tag.string": "false"
         },
-        "auth-model": "native"
+        "auth-model": "native",
+        "handlers": {}
       }
     }
   },

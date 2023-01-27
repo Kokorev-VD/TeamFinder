@@ -1,11 +1,10 @@
 package com.example.TeamFinder.repository.TagToUserRepository
 
-import com.example.TeamFinder.dto.User.UserTag
 import com.example.TeamFinder.model.TagToUser.TagToUserModel
 
 interface TagToUserRepository {
 
-    fun getStringTagsByUserId(userId: Int): UserTag
+    fun getStringTagsByUserId(userId: Int): List<String>
 
     fun getTagsByUserId(userId: Int): List<TagToUserModel>
 

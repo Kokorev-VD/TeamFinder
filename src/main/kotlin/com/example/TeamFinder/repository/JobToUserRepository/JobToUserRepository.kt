@@ -10,4 +10,7 @@ interface JobToUserRepository {
 
     fun createByJobNameAndUserId(jobName: String, userId: Int)
 
+    fun deleteByUserId(userId: Int)
+
+    fun update(userId: Int, jobNameList: List<String>)
 }

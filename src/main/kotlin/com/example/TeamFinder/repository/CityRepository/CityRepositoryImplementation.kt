@@ -4,18 +4,20 @@ import com.example.TeamFinder.model.City.CityModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Repository
 
+@Repository
 class CityRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
 ) : CityRepository {
     override fun findLastId(): Int =
         jdbcTemplate.query(
-            "select max(id) from CityTable",
+            "select * from cityTable where id = (select max(id) from cityTable)",
             ROW_MAPPER
-        ).first().id
+        ).firstOrNull()?.id ?: 0
 
     override fun createNewCity(name: String) {
-        val id = findLastId()
+        val id = findLastId() + 1
         jdbcTemplate.update(
             "insert into CityTable (id, name) values (:id, :name)",
             mapOf(

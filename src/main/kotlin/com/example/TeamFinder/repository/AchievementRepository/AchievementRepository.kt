@@ -4,9 +4,9 @@ import com.example.TeamFinder.model.Achievement.AchievementModel
 
 interface AchievementRepository {
 
-    fun getBuId(id: Int): AchievementModel
+    fun getById(id: Int): AchievementModel
 
-    fun setByIdAndAchievement(id: Int, achievement: String)
+    fun setAchievement(achievement: String): Int
 
     fun getIdByAchievement(achievement: String): AchievementModel
 

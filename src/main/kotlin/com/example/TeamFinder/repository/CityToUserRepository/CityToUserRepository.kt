@@ -10,4 +10,8 @@ interface CityToUserRepository {
 
     fun createByCityNameAndUserId(cityName: String, userId: Int)
 
+    fun deleteByUserId(userId: Int)
+
+    fun update(userId: Int, cityName: String)
+
 }

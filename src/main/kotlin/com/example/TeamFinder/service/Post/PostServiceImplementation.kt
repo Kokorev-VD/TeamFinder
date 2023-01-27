@@ -1,7 +1,7 @@
 package com.example.TeamFinder.service.Post
 
 import com.example.TeamFinder.dto.Post.Post
-import com.example.TeamFinder.dto.User.UserProfile
+import com.example.TeamFinder.model.Post.PostModel
 import com.example.TeamFinder.repository.MarkRepository.MarkRepository
 import com.example.TeamFinder.repository.PostRepository.PostRepository
 import com.example.TeamFinder.repository.PostRepository.PostToPostRepository
@@ -28,9 +28,9 @@ class PostServiceImplementation(
     override fun getById(id: Int): Post {
         val thisPost = postRepository.findById(id)
         val teamUserId = teamRepository.getByTeamId(id)
-        val team = mutableListOf<UserProfile>()
+        val team = mutableListOf<Int>()
         for (i in teamUserId) {
-            team.add(userService.getById(i.userId))
+            team.add(i.userId)
         }
         return Post(
             title = thisPost.title,
@@ -49,6 +49,29 @@ class PostServiceImplementation(
         )
     }
 
+    override fun create(newPost: Post) {
+        val id = postRepository.create(newPost.title, newPost.body)
+        userCreatorToPostRepository.setUserCreatorIdToPost(
+            userLoginParamsRepository.getByLogin(newPost.creatorLogin)!!.id,
+            id
+        )
+        for (tag in newPost.tagList) {
+            tagToPostRepository.setTagByPostIdAndTagTitle(id, tag)
+        }
+        for (basedPost in newPost.basedPosts) {
+            postToPostRepository.setByBasedPostIdAndDerivedPostId(basedPost.id, id)
+        }
+
+    }
+
+    override fun update(id: Int, newPost: Post) {
+        postRepository.update(id, PostModel(id, newPost.title, newPost.body))
+        tagToPostRepository.deleteByPostId(id)
+        for (tag in newPost.tagList) {
+            tagToPostRepository.setTagByPostIdAndTagTitle(id, tag)
+        }
+    }
+
 
     override fun markUpdate(postId: Int, userId: Int, markType: Int) {
         if (markType == 0) {
@@ -58,43 +81,15 @@ class PostServiceImplementation(
         }
     }
 
-//    override fun getByCreator(creator: Int): List<Post> =
-//        postRepository.findByCreator(creator).map { it.toDto() }
-//
-//    override fun findLastId(): Post =
-//        postRepository.findLastId()?.toDto()!!
-//
-//
-//    override fun create(newPost: Post): Int {
-//        postRepository.create(
-//            creator = newPost.creatorId,
-//            header = newPost.title,
-//            body = newPost.body,
-//        )
-//        return 100
-//    }
-//
-//    override fun update(id: Int, newPost: Post): Int =
-//        postRepository.update(id, newPost.toModel())
-//
-//    override fun deleteById(id: Int): Int =
-//        postRepository.deleteById(id)
-//
-//    private fun PostModel.toDto() = Post(
-//        id = id,
-//        creatorId = creatorId,
-//        title = title,
-//        body = body,
-//        pos_mark = pos_mark,
-//        neg_mark = neg_mark,
-//    )
-//
-//    private fun Post.toModel() = PostModel(
-//        id = id,
-//        creatorId = creatorId,
-//        title = title,
-//        body = body,
-//        pos_mark = pos_mark,
-//        neg_mark = neg_mark,
-//    )
+    override fun deleteById(id: Int) {
+        tagToPostRepository.deleteByPostId(id)
+        postToPostRepository.deleteByBasedPostId(id)
+        postToPostRepository.deleteByDerivedPostId(id)
+        markRepository.deleteByPostId(id)
+        userCreatorToPostRepository.deleteByPostId(id)
+        teamRepository.deleteTeamByPostId(id)
+        postRepository.deleteById(id)
+    }
+
+
 }

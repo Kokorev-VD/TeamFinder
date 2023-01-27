@@ -4,11 +4,13 @@ import com.example.TeamFinder.model.Achievement.AchievementModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Repository
 
+@Repository
 class AchievementRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
 ) : AchievementRepository {
-    override fun getBuId(id: Int): AchievementModel =
+    override fun getById(id: Int): AchievementModel =
         jdbcTemplate.query(
             "select * from AchievementTable where id = :id",
             mapOf(
@@ -17,14 +19,21 @@ class AchievementRepositoryImplementation(
             ROW_MAPPER
         ).first()
 
-    override fun setByIdAndAchievement(id: Int, achievement: String) {
+    fun getLastId(): Int =
+        jdbcTemplate.query(
+            "select * from achievementTable where id = (select max(id) from achievementTable)",
+            ROW_MAPPER
+        ).first().id + 1
+
+    override fun setAchievement(achievement: String): Int {
         jdbcTemplate.update(
             "insert into AchievementTable (id, achievement) values (:id, :achievement)",
             mapOf(
-                "id" to id,
+                "id" to getLastId(),
                 "achievement" to achievement,
             )
         )
+        return getLastId() - 1
     }
 
     override fun getIdByAchievement(achievement: String): AchievementModel =

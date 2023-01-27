@@ -27,6 +27,12 @@ class UserLoginParamsRepositoryImplementation(
             ROW_MAPPER
         ).first().id
 
+    override fun getAllUserLoginParams(): List<UserLoginParamsModel> =
+        jdbcTemplate.query(
+            "select * from userLoginParamsTable",
+            ROW_MAPPER,
+        )
+
 
     override fun getByLogin(login: String): UserLoginParamsModel? =
         jdbcTemplate.query(

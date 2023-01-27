@@ -15,4 +15,12 @@ interface PostToPostRepository {
 
     fun getDerivedListMainInfoPost(id: Int): List<MainInfoPost>
 
+    fun deleteByBasedPostIdAndDerivedPostId(basedPostId: Int, derivedPostId: Int)
+
+    fun deleteByBasedPostId(basedPostId: Int)
+
+    fun deleteByDerivedPostId(derivedPostId: Int)
+
+    fun update(basedPostId: Int, derivedPostId: Int)
+
 }

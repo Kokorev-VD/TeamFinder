@@ -85,12 +85,16 @@ id int unique,
 name text
 )
 
+drop table cityTable
+
 create table CityToUserTable(
 cityId int,
 userId int,
 foreign key (cityId) references citytable(id),
 foreign key (userId) references usertable(id)
 )
+
+select * from citytabl e
 
 create table JobTable(
 id int unique,
@@ -112,11 +116,20 @@ foreign key (achievementId) references achievementtable (id),
 foreign key (tagId) references tagtable (id)
 ) 
 
-drop table achievementtypetotagtable 
+
+insert into achievementtypetable values(10, 10, 'Победитель проектной конференции')
+
+select * from achievementtable
+
+drop table achievementtable
+
+insert into achievementtable values(0, '')
 
 insert into usercreatortoposttable values(1, 1)
 
-alter table posttable drop column creatorId
+
+
+alter table usertable add column email text
 
 create table achievementTypeTable(
 id int unique,
@@ -147,11 +160,15 @@ drop table posttotagtable
 
 drop table teamtable 
 
-select * from teamtable
+select * from usertable
+
+insert into achievementtypetable values(0, )
 
 insert into userloginparamstable values(0, 'Denis', '1234')
 
-insert into userTable values(0, '@shlepa05', 'Hi! My name is Vitya and i am interested in Kotlin', 0)
+insert into userTable values(0, '@shlepa05', 'Hi! My name is Vitya and i am interested in Kotlin', 0, 'digitalfalk@mail.ru')
+
+delete from usertable where id = 0 or id = 1
 
 insert into posttable values(1, 0, 'TestPost2', 'A')
 

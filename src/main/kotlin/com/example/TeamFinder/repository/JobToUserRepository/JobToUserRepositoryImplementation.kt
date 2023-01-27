@@ -5,7 +5,9 @@ import com.example.TeamFinder.repository.JobRepository.JobRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Repository
 
+@Repository
 class JobToUserRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
     @Autowired val jobRepository: JobRepository,
@@ -37,6 +39,22 @@ class JobToUserRepositoryImplementation(
                 "userId" to userId,
             )
         )
+    }
+
+    override fun deleteByUserId(userId: Int) {
+        jdbcTemplate.update(
+            "delete from JobToUserTable where userId = :userId)",
+            mapOf(
+                "userId" to userId,
+            )
+        )
+    }
+
+    override fun update(userId: Int, jobNameList: List<String>) {
+        deleteByUserId(userId)
+        for (jobName in jobNameList) {
+            createByJobNameAndUserId(jobName, userId)
+        }
     }
 
     companion object {

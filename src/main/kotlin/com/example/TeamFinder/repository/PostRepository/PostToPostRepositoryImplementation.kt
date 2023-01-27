@@ -60,6 +60,39 @@ class PostToPostRepositoryImplementation(
         return res.toList()
     }
 
+    override fun deleteByBasedPostIdAndDerivedPostId(basedPostId: Int, derivedPostId: Int) {
+        jdbcTemplate.update(
+            "delete from postToPostTable where (basedPostId = :basedPostId, derivedPostId = :derivedPostId)",
+            mapOf(
+                "basedPostId" to basedPostId,
+                "derivedPostId" to derivedPostId,
+            )
+        )
+    }
+
+    override fun deleteByBasedPostId(basedPostId: Int) {
+        jdbcTemplate.update(
+            "delete from postToPostTable where basedPostId = :basedPostId",
+            mapOf(
+                "basedPostId" to basedPostId,
+            )
+        )
+    }
+
+    override fun deleteByDerivedPostId(derivedPostId: Int) {
+        jdbcTemplate.update(
+            "delete from postToPostTable where derivedPostId = :derivedPostId",
+            mapOf(
+                "derivedPostId" to derivedPostId,
+            )
+        )
+    }
+
+    override fun update(basedPostId: Int, derivedPostId: Int) {
+        deleteByBasedPostIdAndDerivedPostId(basedPostId, derivedPostId)
+        setByBasedPostIdAndDerivedPostId(basedPostId, derivedPostId)
+    }
+
     companion object {
         val ROW_MAPPER = RowMapper<PostExtensionModel> { it, _ ->
             PostExtensionModel(

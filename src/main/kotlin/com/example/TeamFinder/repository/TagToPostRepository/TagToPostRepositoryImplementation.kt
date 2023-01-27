@@ -53,6 +53,15 @@ class TagToPostRepositoryImplementation(
         )
     }
 
+    override fun deleteByPostId(postId: Int) {
+        jdbcTemplate.update(
+            "delete from TagToPostTAble where postId = :postId",
+            mapOf(
+                "postId" to postId,
+            )
+        )
+    }
+
     companion object {
         val ROW_MAPPER = RowMapper<TagToPostModel> { rs, _ ->
             TagToPostModel(

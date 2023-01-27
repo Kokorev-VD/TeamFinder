@@ -11,4 +11,6 @@ interface TeamRepository {
     fun getByUserId(userId: Int): List<TeamModel>
 
     fun removeFromTeamByUserIdAndTeamId(userId: Int, teamId: Int)
+
+    fun deleteTeamByPostId(postId: Int)
 }
