@@ -2,7 +2,7 @@ package com.example.TeamFinder.controller
 
 import com.example.TeamFinder.dto.Mark.Mark
 import com.example.TeamFinder.dto.Mark.MarkWithPost
-import com.example.TeamFinder.dto.Post.Post
+import com.example.TeamFinder.dto.Post.*
 import com.example.TeamFinder.dto.Response.Response
 import com.example.TeamFinder.dto.User.*
 import com.example.TeamFinder.model.User.UserLoginParamsModel
@@ -97,10 +97,26 @@ class Controller(
     //Методы, которые относятся к Post
 
     @GetMapping("/post/{id}")
-    fun getPostById(@PathVariable id: Int) =
+    fun getPostById(@PathVariable id: Int): MainInfoPost =
         postService.getById(id)
 
-    @PutMapping("/post/updateMark")
+    @GetMapping("/post/team/{id}")
+    fun getPostTeamById(@PathVariable id: Int): PostTeam =
+        postService.getPostTeamById(id)
+
+    @GetMapping("/post/mark/{id}")
+    fun getPostMarkById(@PathVariable id: Int): PostMark =
+        postService.getPostMarkById(id)
+
+    @GetMapping("/post/tag/{id}")
+    fun getPostTagById(@PathVariable id: Int): PostTag =
+        postService.getPostTagById(id)
+
+    @GetMapping("/post/related/{id}")
+    fun getRelatedPostById(@PathVariable id: Int): RelatedPost =
+        postService.getRelatedPost(id)
+
+    @PutMapping("/post/update/mark")
     fun updateMArk(@RequestBody mark: Mark) {
         postService.markUpdate(mark.postId, mark.userId, mark.markType)
     }
@@ -109,10 +125,19 @@ class Controller(
     fun createNewPost(@RequestBody newPost: Post) =
         postService.create(newPost)
 
-    @PutMapping("/post/update/{postId}")
-    fun updatePostById(@PathVariable postId: Int, @RequestBody newPost: Post) =
-        postService.update(postId, newPost)
+    @PutMapping("/post/update")
+    fun updatePost(@RequestBody newPost: MainInfoPost) =
+        postService.updateMainInfoPost(newPost)
 
+    @PutMapping("/post/update/tag")
+    fun updatePostTag(@RequestBody newPost: PostTag) {
+        postService.updatePostTag(newPost)
+    }
+
+    @PutMapping("/post/update/related")
+    fun updateRelatedPost(@RequestBody relatedPost: RelatedPost) {
+        postService.updateRelatedPost(relatedPost)
+    }
 
     @DeleteMapping("/post/delete")
     fun deletePostById(@RequestBody id: Int) =

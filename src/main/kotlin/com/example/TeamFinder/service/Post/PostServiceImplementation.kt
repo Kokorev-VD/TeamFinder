@@ -78,12 +78,24 @@ class PostServiceImplementation(
 
     }
 
-    override fun update(id: Int, newPost: Post) {
-        postRepository.update(id, PostModel(id, newPost.title, newPost.body))
-        tagToPostRepository.deleteByPostId(id)
+    override fun updatePostTag(newPost: PostTag) {
+        tagToPostRepository.deleteByPostId(newPost.postId)
         for (tag in newPost.tagList) {
-            tagToPostRepository.setTagByPostIdAndTagTitle(id, tag)
+            tagToPostRepository.setTagByPostIdAndTagTitle(newPost.postId, tag)
         }
+    }
+
+    override fun updateRelatedPost(relatedPost: RelatedPost) {
+        for (bp in relatedPost.basedPost) {
+            postToPostRepository.setByBasedPostIdAndDerivedPostId(bp.id, relatedPost.postId)
+        }
+        for (dp in relatedPost.derivedPost) {
+            postToPostRepository.setByBasedPostIdAndDerivedPostId(relatedPost.postId, dp.id)
+        }
+    }
+
+    override fun updateMainInfoPost(newPost: MainInfoPost) {
+        postRepository.update(newPost.id, PostModel(newPost.id, newPost.title, newPost.body))
     }
 
 

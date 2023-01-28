@@ -16,7 +16,11 @@ interface PostService {
 
     fun create(newPost: Post)
 
-    fun update(id: Int, newPost: Post)
+    fun updateMainInfoPost(newPost: MainInfoPost)
+
+    fun updatePostTag(newPost: PostTag)
+
+    fun updateRelatedPost(relatedPost: RelatedPost)
 
     fun markUpdate(postId: Int, userId: Int, markType: Int)
 
