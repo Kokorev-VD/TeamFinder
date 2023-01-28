@@ -1,9 +1,9 @@
 package com.example.TeamFinder.service.User
 
+import com.example.TeamFinder.dto.Achievement.Achievement
 import com.example.TeamFinder.dto.Mark.MarkWithPost
 import com.example.TeamFinder.dto.Response.Response
-import com.example.TeamFinder.dto.User.User
-import com.example.TeamFinder.dto.User.UserAchievement
+import com.example.TeamFinder.dto.User.*
 import com.example.TeamFinder.model.User.UserLoginParamsModel
 import com.example.TeamFinder.model.User.UserModel
 import com.example.TeamFinder.repository.AchievementRepository.*
@@ -12,6 +12,7 @@ import com.example.TeamFinder.repository.CityToUserRepository.CityToUserReposito
 import com.example.TeamFinder.repository.JobRepository.JobRepository
 import com.example.TeamFinder.repository.JobToUserRepository.JobToUserRepository
 import com.example.TeamFinder.repository.MarkRepository.MarkRepository
+import com.example.TeamFinder.repository.TagRepository.TagRepository
 import com.example.TeamFinder.repository.TagToUserRepository.TagToUserRepository
 import com.example.TeamFinder.repository.TeamRepository.TeamRepository
 import com.example.TeamFinder.repository.UserCreatorToPostRepository.UserCreatorToPostRepository
@@ -38,6 +39,7 @@ class UserServiceImplementation(
     @Autowired private val jobRepository: JobRepository,
     @Autowired private val cityToUserRepository: CityToUserRepository,
     @Autowired private val cityRepository: CityRepository,
+    @Autowired private val tagRepository: TagRepository,
 ): UserService {
     override fun getById(id: Int): User {
         val userModel = userRepository.findById(id)
@@ -50,23 +52,29 @@ class UserServiceImplementation(
         )
     }
 
-    override fun getUserAchievement(id: Int): List<Int> {
-        val res = mutableListOf<Int>()
+    override fun getUserAchievement(id: Int): UserAchievement {
+        val res = mutableListOf<Achievement>()
         for (i in achievementToUserRepository.getByUserId(id)) {
-            res.add(i.achievementId)
+            res.add(
+                Achievement(
+                    achievementRepository.getById(i.achievementId).achievement,
+                    achievementTypeRepository.getById(achievementToTypeRepository.getByAchievementId(i.achievementId).typeId).name,
+                    tagRepository.getById(achievementToTagRepository.getByAchievementId(i.achievementId).tagId).title
+                )
+            )
         }
-        return res
+        return UserAchievement(id, res)
     }
 
-    override fun getUserTags(id: Int): List<String> =
-        tagToUserRepository.getStringTagsByUserId(id)
+    override fun getUserTags(id: Int): UserTag =
+        UserTag(id, tagToUserRepository.getStringTagsByUserId(id))
 
-    override fun getUserTeam(id: Int): List<Int> {
+    override fun getUserTeam(id: Int): UserTeam {
         val res = mutableListOf<Int>()
         for (i in teamRepository.getByUserId(id)) {
             res.add(i.teamId)
         }
-        return res
+        return UserTeam(id, res)
     }
 
     override fun getUserMarks(id: Int): List<MarkWithPost> =
@@ -80,16 +88,16 @@ class UserServiceImplementation(
         return res
     }
 
-    override fun getUserJob(id: Int): List<String> {
+    override fun getUserJob(id: Int): UserJob {
         val res = mutableListOf<String>()
         for (i in jobToUserRepository.getJobByUserId(id)) {
             res.add(jobRepository.findJobById(i.jobId))
         }
-        return res
+        return UserJob(id, res)
     }
 
-    override fun getUserCity(id: Int): String =
-        cityToUserRepository.getCityByUserId(id)
+    override fun getUserCity(id: Int): UserCity =
+        UserCity(id, cityToUserRepository.getCityByUserId(id))
 
     override fun setUserJob(id: Int, job: List<String>) {
         jobToUserRepository.update(id, job)
@@ -100,19 +108,27 @@ class UserServiceImplementation(
     }
 
 
-    override fun getUserPost(id: Int): List<Int> {
+    override fun getUserPost(id: Int): UserPost {
         val res = mutableListOf<Int>()
         for (i in userCreatorToPostRepository.getUserCreatorToPostModelByUserId(id)) {
             res.add(i.postId)
         }
-        return res
+        return UserPost(id, res)
     }
 
     override fun setUserAchievement(userAchievement: UserAchievement) {
-        val achievementId = achievementRepository.setAchievement(userAchievement.achievementTitle)
-        achievementToUserRepository.setByAchievementIdAndUserId(achievementId, userAchievement.userId)
-        achievementToTagRepository.setByAchievementIdAndTagId(achievementId, userAchievement.achievementTag)
-        achievementToTypeRepository.setByAchievementIdAndTypeId(achievementId, userAchievement.achievementTypeId)
+        for (achievement in userAchievement.achievement) {
+            val achievementId = achievementRepository.setAchievement(achievement.achievementTitle)
+            achievementToUserRepository.setByAchievementIdAndUserId(achievementId, userAchievement.userId)
+            achievementToTagRepository.setByAchievementIdAndTagId(
+                achievementId,
+                tagRepository.getByTitile(achievement.achievementTag).id
+            )
+            achievementToTypeRepository.setByAchievementIdAndTypeId(
+                achievementId,
+                achievementTypeRepository.getByName(achievement.achievementType).id
+            )
+        }
     }
 
     override fun updateUserInfo(user: UserModel) {

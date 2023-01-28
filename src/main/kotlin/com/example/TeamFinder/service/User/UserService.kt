@@ -2,8 +2,7 @@ package com.example.TeamFinder.service.User
 
 import com.example.TeamFinder.dto.Mark.MarkWithPost
 import com.example.TeamFinder.dto.Response.Response
-import com.example.TeamFinder.dto.User.User
-import com.example.TeamFinder.dto.User.UserAchievement
+import com.example.TeamFinder.dto.User.*
 import com.example.TeamFinder.model.User.UserLoginParamsModel
 import com.example.TeamFinder.model.User.UserModel
 
@@ -12,25 +11,25 @@ interface UserService {
 
     fun getById(id: Int): User
 
-    fun getUserAchievement(id: Int): List<Int>
+    fun getUserAchievement(id: Int): UserAchievement
 
-    fun getUserTags(id: Int): List<String>
+    fun getUserTags(id: Int): UserTag
 
-    fun getUserTeam(id: Int): List<Int>
+    fun getUserTeam(id: Int): UserTeam
 
     fun getUserMarks(id: Int): List<MarkWithPost>
 
     fun getAchievementTypes(): List<String>
 
-    fun getUserJob(id: Int): List<String>
+    fun getUserJob(id: Int): UserJob
 
-    fun getUserCity(id: Int): String
+    fun getUserCity(id: Int): UserCity
 
     fun setUserJob(id: Int, job: List<String>)
 
     fun setUserCity(id: Int, cityName: String)
 
-    fun getUserPost(id: Int): List<Int>
+    fun getUserPost(id: Int): UserPost
 
     fun setUserAchievement(userAchievement: UserAchievement)
 
@@ -40,6 +39,6 @@ interface UserService {
 
     fun authorisation(userLoginParams: UserLoginParamsModel): Response
 
-    fun registration(login: String, pass: String): Any
+    fun registration(login: String, pass: String): Response
 
 }

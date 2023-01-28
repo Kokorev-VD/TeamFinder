@@ -1,6 +1,7 @@
 package com.example.TeamFinder.service.Post
 
-import com.example.TeamFinder.dto.Post.Post
+import com.example.TeamFinder.dto.Post.*
+import com.example.TeamFinder.dto.User.User
 import com.example.TeamFinder.model.Post.PostModel
 import com.example.TeamFinder.repository.MarkRepository.MarkRepository
 import com.example.TeamFinder.repository.PostRepository.PostRepository
@@ -25,14 +26,10 @@ class PostServiceImplementation(
     @Autowired private val userCreatorToPostRepository: UserCreatorToPostRepository,
 ) : PostService {
 
-    override fun getById(id: Int): Post {
+    override fun getById(id: Int): MainInfoPost {
         val thisPost = postRepository.findById(id)
-        val teamUserId = teamRepository.getByTeamId(id)
-        val team = mutableListOf<Int>()
-        for (i in teamUserId) {
-            team.add(i.userId)
-        }
-        return Post(
+        return MainInfoPost(
+            id = id,
             title = thisPost.title,
             creatorLogin = userLoginParamsRepository.getById(
                 userCreatorToPostRepository.getUserCreatorToPostModelByPostId(
@@ -40,14 +37,31 @@ class PostServiceImplementation(
                 ).userId
             ).login,
             body = thisPost.body,
-            team = team,
-            posMark = markRepository.getPosMarksByPostId(id),
-            negMark = markRepository.getNegMarksByPostId(id),
-            tagList = tagToPostRepository.getListTagsByPostId(id),
-            derivedPosts = postToPostRepository.getDerivedListMainInfoPost(id),
-            basedPosts = postToPostRepository.getBasedListMainInfoPost(id),
         )
     }
+
+    override fun getPostTeamById(id: Int): PostTeam {
+        val teamUserId = teamRepository.getByTeamId(id)
+        val team = mutableListOf<User>()
+        for (i in teamUserId) {
+            team.add(userService.getById(i.userId))
+        }
+        return PostTeam(id, team)
+    }
+
+    override fun getPostMarkById(id: Int): PostMark =
+        PostMark(id, markRepository.getPosMarksByPostId(id), markRepository.getNegMarksByPostId(id))
+
+    override fun getPostTagById(id: Int): PostTag =
+        PostTag(id, tagToPostRepository.getListTagsByPostId(id))
+
+    override fun getRelatedPost(id: Int): RelatedPost =
+        RelatedPost(
+            id,
+            postToPostRepository.getDerivedListMainInfoPost(id),
+            postToPostRepository.getBasedListMainInfoPost(id)
+        )
+
 
     override fun create(newPost: Post) {
         val id = postRepository.create(newPost.title, newPost.body)

@@ -29,15 +29,15 @@ class Controller(
     }
 
     @GetMapping("/user/achievement/{id}")
-    fun getUserAchievementById(@PathVariable id: Int): List<Int> =
+    fun getUserAchievementById(@PathVariable id: Int): UserAchievement =
         userService.getUserAchievement(id)
 
     @GetMapping("/user/tag/{id}")
-    fun getUserTagById(@PathVariable id: Int): List<String> =
+    fun getUserTagById(@PathVariable id: Int): UserTag =
         userService.getUserTags(id)
 
     @GetMapping("/user/team/{id}")
-    fun getUserTeamById(@PathVariable id: Int): List<Int> =
+    fun getUserTeamById(@PathVariable id: Int): UserTeam =
         userService.getUserTeam(id)
 
     @GetMapping("/user/mark/{id}")
@@ -45,7 +45,7 @@ class Controller(
         userService.getUserMarks(id)
 
     @GetMapping("/user/post/{id}")
-    fun getUserPost(@PathVariable id: Int): List<Int> =
+    fun getUserPost(@PathVariable id: Int): UserPost =
         userService.getUserPost(id)
 
     @GetMapping("/achievement/types")
@@ -53,14 +53,14 @@ class Controller(
         userService.getAchievementTypes()
 
     @GetMapping("/user/city/{id}")
-    fun getCityByUserId(@PathVariable id: Int): String =
+    fun getCityByUserId(@PathVariable id: Int): UserCity =
         userService.getUserCity(id)
 
     @GetMapping("/user/job/{id}")
-    fun getJobListByUserId(@PathVariable id: Int): List<String> =
+    fun getJobListByUserId(@PathVariable id: Int): UserJob =
         userService.getUserJob(id)
 
-    @PostMapping("/user/update/job")
+    @PutMapping("/user/update/job")
     fun setJobToUser(@RequestBody job: UserJob) {
         userService.setUserJob(job.userId, job.userJob)
     }
@@ -91,7 +91,7 @@ class Controller(
 
 
     @PostMapping("/auth/reg")
-    fun registration(@RequestBody user: UserLoginParamsModel) =
+    fun registration(@RequestBody user: UserLoginParamsModel): Response =
         userService.registration(user.login, user.pass)
 
     //Методы, которые относятся к Post

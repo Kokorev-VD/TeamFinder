@@ -2,6 +2,8 @@ package com.example.TeamFinder.repository.PostRepository
 
 import com.example.TeamFinder.dto.Post.MainInfoPost
 import com.example.TeamFinder.model.Post.PostExtensionModel
+import com.example.TeamFinder.repository.UserCreatorToPostRepository.UserCreatorToPostRepository
+import com.example.TeamFinder.repository.UserRepository.UserLoginParamsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Repository
 class PostToPostRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
     @Autowired val postRepository: PostRepository,
+    @Autowired val userCreatorToPostRepository: UserCreatorToPostRepository,
+    @Autowired val userLoginParamsRepository: UserLoginParamsRepository,
 ) : PostToPostRepository {
     override fun setByBasedPostIdAndDerivedPostId(basedPostId: Int, derivedPostId: Int) {
         jdbcTemplate.update(
@@ -46,7 +50,13 @@ class PostToPostRepositoryImplementation(
         val list = getByDerivedPostId(id)
         val res = mutableListOf<MainInfoPost>()
         for (i in list) {
-            res.add(MainInfoPost(i.basedPostId, postRepository.findById(i.basedPostId).title))
+            res.add(
+                MainInfoPost(
+                    i.derivedPostId, postRepository.findById(i.derivedPostId).title,
+                    userLoginParamsRepository.getById(userCreatorToPostRepository.getUserCreatorToPostModelByPostId(id).userId).login,
+                    postRepository.findById(id).body
+                )
+            )
         }
         return res.toList()
     }
@@ -55,7 +65,13 @@ class PostToPostRepositoryImplementation(
         val list = getByBasedPostId(id)
         val res = mutableListOf<MainInfoPost>()
         for (i in list) {
-            res.add(MainInfoPost(i.derivedPostId, postRepository.findById(i.derivedPostId).title))
+            res.add(
+                MainInfoPost(
+                    i.derivedPostId, postRepository.findById(i.derivedPostId).title,
+                    userLoginParamsRepository.getById(userCreatorToPostRepository.getUserCreatorToPostModelByPostId(id).userId).login,
+                    postRepository.findById(id).body
+                )
+            )
         }
         return res.toList()
     }
