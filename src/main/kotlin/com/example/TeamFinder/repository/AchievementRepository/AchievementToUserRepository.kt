@@ -1,5 +1,6 @@
 package com.example.TeamFinder.repository.AchievementRepository
 
+import com.example.TeamFinder.dto.User.UserAchievement
 import com.example.TeamFinder.model.Achievement.AchievementToUserModel
 
 interface AchievementToUserRepository {
@@ -8,4 +9,7 @@ interface AchievementToUserRepository {
 
     fun setByAchievementIdAndUserId(achievementId: Int, userId: Int)
 
+    fun deleteByUserId(userId: Int)
+
+    fun update(userAchievement: UserAchievement)
 }

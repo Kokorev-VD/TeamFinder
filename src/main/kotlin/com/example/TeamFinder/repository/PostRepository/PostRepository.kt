@@ -8,11 +8,9 @@ interface PostRepository {
 
     fun findById(id: Int): PostModel
 
-    fun findByCreator(creator: Int): List<PostModel>
-
     fun findLastId(): PostModel?
 
-    fun create(title: String, body: String): Int
+    fun create(title: String, body: String, icon: Int, description: String): Int
 
     fun update(id: Int, newPost: PostModel): Int
 

@@ -1,13 +1,9 @@
 package com.example.TeamFinder.service.User
 
 import com.example.TeamFinder.dto.Achievement.Achievement
-import com.example.TeamFinder.dto.Mark.MarkWithPost
 import com.example.TeamFinder.dto.Response.Response
 import com.example.TeamFinder.dto.User.*
-import com.example.TeamFinder.model.User.UserLoginParamsModel
-import com.example.TeamFinder.model.User.UserModel
 import com.example.TeamFinder.repository.AchievementRepository.*
-import com.example.TeamFinder.repository.CityRepository.CityRepository
 import com.example.TeamFinder.repository.CityToUserRepository.CityToUserRepository
 import com.example.TeamFinder.repository.JobRepository.JobRepository
 import com.example.TeamFinder.repository.JobToUserRepository.JobToUserRepository
@@ -38,7 +34,6 @@ class UserServiceImplementation(
     @Autowired private val jobToUserRepository: JobToUserRepository,
     @Autowired private val jobRepository: JobRepository,
     @Autowired private val cityToUserRepository: CityToUserRepository,
-    @Autowired private val cityRepository: CityRepository,
     @Autowired private val tagRepository: TagRepository,
 ): UserService {
     override fun getById(id: Int): User {
@@ -77,8 +72,8 @@ class UserServiceImplementation(
         return UserTeam(id, res)
     }
 
-    override fun getUserMarks(id: Int): List<MarkWithPost> =
-        markRepository.getMarkWithStringPostByUserId(id)
+    override fun getUserMark(id: Int): UserMark =
+        UserMark(id, markRepository.getMarkWithStringPostByUserId(id))
 
     override fun getAchievementTypes(): List<String> {
         val res = mutableListOf<String>()
@@ -117,9 +112,9 @@ class UserServiceImplementation(
     }
 
     override fun setUserAchievement(userAchievement: UserAchievement) {
+        achievementToUserRepository.update(userAchievement)
         for (achievement in userAchievement.achievement) {
-            val achievementId = achievementRepository.setAchievement(achievement.achievementTitle)
-            achievementToUserRepository.setByAchievementIdAndUserId(achievementId, userAchievement.userId)
+            val achievementId = achievementRepository.getIdByAchievement(achievement.achievementTitle).id
             achievementToTagRepository.setByAchievementIdAndTagId(
                 achievementId,
                 tagRepository.getByTitile(achievement.achievementTag).id
@@ -131,15 +126,15 @@ class UserServiceImplementation(
         }
     }
 
-    override fun updateUserInfo(user: UserModel) {
-        userRepository.update(user.id, user.tg, user.description, user.imageId, user.email)
+    override fun updateUserInfo(id: Int, user: User) {
+        userRepository.update(id, user.tg, user.description, user.imageId, user.email)
     }
 
     override fun updateUserTag(id: Int, tag: List<String>) {
         tagToUserRepository.update(id, tag)
     }
 
-    override fun authorisation(userLoginParams: UserLoginParamsModel): Response {
+    override fun authorisation(userLoginParams: UserLoginParams): Response {
         val dataBaseUserLoginParamsModel =
             userLoginParamsRepository.getByLogin(userLoginParams.login) ?: return Response(600) // user not found
         if (dataBaseUserLoginParamsModel.pass == userLoginParams.pass) {

@@ -1,12 +1,9 @@
 package com.example.TeamFinder.controller
 
 import com.example.TeamFinder.dto.Mark.Mark
-import com.example.TeamFinder.dto.Mark.MarkWithPost
 import com.example.TeamFinder.dto.Post.*
 import com.example.TeamFinder.dto.Response.Response
 import com.example.TeamFinder.dto.User.*
-import com.example.TeamFinder.model.User.UserLoginParamsModel
-import com.example.TeamFinder.model.User.UserModel
 import com.example.TeamFinder.service.Post.PostService
 import com.example.TeamFinder.service.Recommendation.RecommendationService
 import com.example.TeamFinder.service.Team.TeamService
@@ -41,8 +38,8 @@ class Controller(
         userService.getUserTeam(id)
 
     @GetMapping("/user/mark/{id}")
-    fun getUserMark(@PathVariable id: Int): List<MarkWithPost> =
-        userService.getUserMarks(id)
+    fun getUserMark(@PathVariable id: Int): UserMark =
+        userService.getUserMark(id)
 
     @GetMapping("/user/post/{id}")
     fun getUserPost(@PathVariable id: Int): UserPost =
@@ -53,11 +50,11 @@ class Controller(
         userService.getAchievementTypes()
 
     @GetMapping("/user/city/{id}")
-    fun getCityByUserId(@PathVariable id: Int): UserCity =
+    fun getUserCityById(@PathVariable id: Int): UserCity =
         userService.getUserCity(id)
 
     @GetMapping("/user/job/{id}")
-    fun getJobListByUserId(@PathVariable id: Int): UserJob =
+    fun getUserJobById(@PathVariable id: Int): UserJob =
         userService.getUserJob(id)
 
     @PutMapping("/user/update/job")
@@ -66,13 +63,13 @@ class Controller(
     }
 
     @PutMapping("/user/update/city")
-    fun setCityByUserCity(@RequestBody userCity: UserCity) {
+    fun setCityToUser(@RequestBody userCity: UserCity) {
         userService.setUserCity(userCity.userId, userCity.cityName)
     }
 
-    @PutMapping("/user/update/model")
-    fun updateUserById(@RequestBody userParams: UserModel) {
-        userService.updateUserInfo(userParams)
+    @PutMapping("/user/update/{id}")
+    fun updateUser(@PathVariable id: Int, @RequestBody userParams: User) {
+        userService.updateUserInfo(id, userParams)
     }
 
     @PutMapping("/user/update/achievement")
@@ -86,12 +83,12 @@ class Controller(
     }
 
     @PostMapping("/auth/log")
-    fun authorizeNewUser(@RequestBody user: UserLoginParamsModel): Response =
+    fun authorizeNewUser(@RequestBody user: UserLoginParams): Response =
         userService.authorisation(user)
 
 
     @PostMapping("/auth/reg")
-    fun registration(@RequestBody user: UserLoginParamsModel): Response =
+    fun registration(@RequestBody user: UserLoginParams): Response =
         userService.registration(user.login, user.pass)
 
     //Методы, которые относятся к Post
@@ -117,7 +114,7 @@ class Controller(
         postService.getRelatedPost(id)
 
     @PutMapping("/post/update/mark")
-    fun updateMArk(@RequestBody mark: Mark) {
+    fun updateMark(@RequestBody mark: Mark) {
         postService.markUpdate(mark.postId, mark.userId, mark.markType)
     }
 
@@ -139,16 +136,11 @@ class Controller(
         postService.updateRelatedPost(relatedPost)
     }
 
-    @DeleteMapping("/post/delete")
-    fun deletePostById(@RequestBody id: Int) =
+    @DeleteMapping("/post/delete/{id}")
+    fun deletePostById(@PathVariable id: Int) =
         postService.deleteById(id)
 
     // Методы, которые относятся к Team
-
-    @GetMapping("/team/{teamId}")
-    fun getTeamByTeamId(@PathVariable teamId: Int): List<User> =
-        teamService.readTeamByPostId(teamId)
-
     @PostMapping("/team/{teamId}/add/{userId}")
     fun addUserToTeam(@PathVariable teamId: Int, @PathVariable userId: Int) {
         teamService.addUserToTeam(userId, teamId)

@@ -101,6 +101,11 @@ id int unique,
 name text
 )
 
+delete from posttable where id = 0 or id = 1
+
+alter table posttable add description text
+
+alter table posttable add icon int
 
 create table JobToUserTable(
 jobId int,

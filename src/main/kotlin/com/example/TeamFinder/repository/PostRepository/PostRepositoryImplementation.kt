@@ -28,33 +28,24 @@ class PostRepositoryImplementation(
             ROW_MAPPER
         ).first()
 
-    override fun findByCreator(creator: Int): List<PostModel> {
-        return jdbcTemplate.query(
-            "select * from postTable where creator = :creator",
-            mapOf(
-                "creator" to creator,
-            ),
-            ROW_MAPPER
-        )
-    }
-
-
     override fun findLastId(): PostModel? =
         jdbcTemplate.query(
             "select * from postTable where id = (select max(id) from postTable)",
             ROW_MAPPER
         ).firstOrNull()
 
-    override fun create(title: String, body: String): Int {
+    override fun create(title: String, body: String, icon: Int, description: String): Int {
         val lastIdPostModel = findLastId()?.id ?: -1
         jdbcTemplate.update(
-            "insert into postTable (id, title, body) " +
-                    "values (:id ,:title, :body)",
+            "insert into postTable (id, title, body, icon, description) " +
+                    "values (:id ,:title, :body, :icon, :description)",
             MapSqlParameterSource(
                 mapOf(
                     "id" to lastIdPostModel + 1,
                     "title" to title,
                     "body" to body,
+                    "icon" to icon,
+                    "description" to description,
                 )
             ),
         )
@@ -63,14 +54,17 @@ class PostRepositoryImplementation(
 
     override fun update(id: Int, newPost: PostModel): Int {
         jdbcTemplate.update(
-            "update postTable set title = :title, body = :body," +
+            "update postTable set title = :title, body = :body, icon = :icon, description = :description" +
                     " where id = :id",
             MapSqlParameterSource(
                 mapOf(
                     "id" to id,
                     "title" to newPost.title,
                     "body" to newPost.body,
-                )
+                    "icon" to newPost.icon,
+                    "description" to newPost.description,
+
+                    )
             ),
         )
         return 100
@@ -93,7 +87,9 @@ class PostRepositoryImplementation(
             PostModel(
                 id = rs.getInt("id"),
                 title = rs.getString("title"),
+                icon = rs.getInt("icon"),
                 body = rs.getString("body"),
+                description = rs.getString("description"),
             )
         }
     }

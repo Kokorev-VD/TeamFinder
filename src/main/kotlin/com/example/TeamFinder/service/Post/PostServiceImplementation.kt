@@ -37,6 +37,8 @@ class PostServiceImplementation(
                 ).userId
             ).login,
             body = thisPost.body,
+            icon = thisPost.icon,
+            description = thisPost.description,
         )
     }
 
@@ -64,7 +66,7 @@ class PostServiceImplementation(
 
 
     override fun create(newPost: Post) {
-        val id = postRepository.create(newPost.title, newPost.body)
+        val id = postRepository.create(newPost.title, newPost.body, newPost.icon, newPost.description)
         userCreatorToPostRepository.setUserCreatorIdToPost(
             userLoginParamsRepository.getByLogin(newPost.creatorLogin)!!.id,
             id
@@ -95,7 +97,10 @@ class PostServiceImplementation(
     }
 
     override fun updateMainInfoPost(newPost: MainInfoPost) {
-        postRepository.update(newPost.id, PostModel(newPost.id, newPost.title, newPost.body))
+        postRepository.update(
+            newPost.id,
+            PostModel(newPost.id, newPost.title, newPost.icon, newPost.description, newPost.body)
+        )
     }
 
 

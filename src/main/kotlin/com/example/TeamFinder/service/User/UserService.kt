@@ -1,10 +1,7 @@
 package com.example.TeamFinder.service.User
 
-import com.example.TeamFinder.dto.Mark.MarkWithPost
 import com.example.TeamFinder.dto.Response.Response
 import com.example.TeamFinder.dto.User.*
-import com.example.TeamFinder.model.User.UserLoginParamsModel
-import com.example.TeamFinder.model.User.UserModel
 
 
 interface UserService {
@@ -17,7 +14,7 @@ interface UserService {
 
     fun getUserTeam(id: Int): UserTeam
 
-    fun getUserMarks(id: Int): List<MarkWithPost>
+    fun getUserMark(id: Int): UserMark
 
     fun getAchievementTypes(): List<String>
 
@@ -33,11 +30,11 @@ interface UserService {
 
     fun setUserAchievement(userAchievement: UserAchievement)
 
-    fun updateUserInfo(user: UserModel)
+    fun updateUserInfo(id: Int, user: User)
 
     fun updateUserTag(id: Int, tag: List<String>)
 
-    fun authorisation(userLoginParams: UserLoginParamsModel): Response
+    fun authorisation(userLoginParams: UserLoginParams): Response
 
     fun registration(login: String, pass: String): Response
 
