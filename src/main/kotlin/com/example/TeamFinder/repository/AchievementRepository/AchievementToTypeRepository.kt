@@ -8,4 +8,5 @@ interface AchievementToTypeRepository {
 
     fun setByAchievementIdAndTypeId(achievementId: Int, typeId: Int)
 
+    fun deleteByAchievementId(achievementId: Int)
 }

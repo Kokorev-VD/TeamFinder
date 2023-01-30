@@ -43,7 +43,7 @@ class JobToUserRepositoryImplementation(
 
     override fun deleteByUserId(userId: Int) {
         jdbcTemplate.update(
-            "delete from JobToUserTable where userId = :userId)",
+            "delete from JobToUserTable where userId = :userId",
             mapOf(
                 "userId" to userId,
             )
@@ -51,7 +51,11 @@ class JobToUserRepositoryImplementation(
     }
 
     override fun update(userId: Int, jobNameList: List<String>) {
+        val job = getJobByUserId(userId)
         deleteByUserId(userId)
+        for (i in job) {
+            jobRepository.deleteById(i.jobId)
+        }
         for (jobName in jobNameList) {
             createByJobNameAndUserId(jobName, userId)
         }
@@ -60,7 +64,7 @@ class JobToUserRepositoryImplementation(
     companion object {
         val ROW_MAPPER = RowMapper<JobToUserModel> { it, _ ->
             JobToUserModel(
-                jobId = it.getInt("cityId"),
+                jobId = it.getInt("jobId"),
                 userId = it.getInt("userId"),
             )
         }

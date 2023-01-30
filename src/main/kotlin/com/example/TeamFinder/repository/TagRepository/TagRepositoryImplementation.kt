@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository
 class TagRepositoryImplementation(
     private val jdbcTemplate: NamedParameterJdbcTemplate,
 ) : TagRepository {
-    override fun getByTitile(title: String): TagModel =
+    override fun getByTitle(title: String): TagModel =
         jdbcTemplate.query(
             "select * from tagTable where title = :title",
             mapOf(
@@ -30,11 +30,23 @@ class TagRepositoryImplementation(
             ROW_MAPPER
         ).first()
 
+    override fun setByIdAndTitle(id: Int, subjectId: Int, title: String) {
+        jdbcTemplate.update(
+            "insert into TagTable values(:id, :subjectId, :title)",
+            mapOf(
+                "id" to id,
+                "subjectId" to subjectId,
+                "title" to title,
+            )
+        )
+    }
+
 
     private companion object {
         val ROW_MAPPER = RowMapper<TagModel> { rs, _ ->
             TagModel(
                 id = rs.getInt("id"),
+                subjectId = rs.getInt("subjectId"),
                 title = rs.getString("title"),
             )
         }

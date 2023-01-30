@@ -56,7 +56,9 @@ foreign key (userId) references usertable (id)
 
 create table TagTable(
 id int unique,
-title text
+subjectId int,
+title text,
+foreign key (subjectId) references TagSubjectTable(id) 
 )
 
 create table TagToUserTable(
@@ -94,7 +96,60 @@ foreign key (cityId) references citytable(id),
 foreign key (userId) references usertable(id)
 )
 
-select * from citytabl e
+insert into TagSubjectTable values(0, 'Математика')
+
+delete from tagsubjecttable  where id = 0
+
+delete from tagtable where id = 0
+
+select * from tagsubjecttable
+
+605
+
+update usertable set description = 'Всем привет! Меня зовут Виктор К. мне нравится математический анализ и программная инженерия!' where id = 0
+
+select * from achievementtable
+
+delete from jobtable where id = -1
+
+insert into jobtable values(0 , 'ghj')
+
+select * from jobtable
+
+delete from achievementtable where id > 0
+
+delete from achievementtotagtable where achievementid >= 0
+
+select *
+
+select * from achievementtypetable
+
+select * from tagtable
+
+select * from usertoachievementtable 
+
+select * from achievementtypetable
+
+select * from usertable
+
+select * from citytable where name = 'Москва'
+
+create table TagSubjectTable(
+id int unique,
+subject text
+)
+
+drop table tagtable
+	
+drop table achievementtotagtable
+
+drop table tagtoposttable 
+
+drop table tagtousertable 
+
+drop table tagsubjecttable
+
+select * from citytable
 
 create table JobTable(
 id int unique,

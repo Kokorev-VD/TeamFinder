@@ -10,4 +10,5 @@ interface AchievementRepository {
 
     fun getIdByAchievement(achievement: String): AchievementModel
 
+    fun deleteById(id: Int)
 }

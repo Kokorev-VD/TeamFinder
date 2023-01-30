@@ -16,7 +16,7 @@ class TagToPostRepositoryImplementation(
 ) : TagToPostRepository {
     override fun getTagsByPostId(postId: Int): List<TagToPostModel> =
         jdbcTemplate.query(
-            "select * from TagToPostTable where postId = :postId",
+            "select * from TagToPostTable where postId = :postId order by postId, tagId",
             mapOf(
                 "postId" to postId,
             ),
@@ -32,7 +32,7 @@ class TagToPostRepositoryImplementation(
     }
 
     override fun setTagByPostIdAndTagTitle(postId: Int, tagTitle: String) {
-        val tagId = tagRepository.getByTitile(tagTitle).id
+        val tagId = tagRepository.getByTitle(tagTitle).id
         jdbcTemplate.update(
             "insert into TagToPostTable (tagId, postId) values (:tagId, :postId)",
             mapOf(
@@ -43,7 +43,7 @@ class TagToPostRepositoryImplementation(
     }
 
     override fun deleteByPostIdAndTagTitle(postId: Int, tagTitle: String) {
-        val tagId = tagRepository.getByTitile(tagTitle).id
+        val tagId = tagRepository.getByTitle(tagTitle).id
         jdbcTemplate.update(
             "delete from TagToPostTable where postId = :postId and tagId = :tagId",
             mapOf(

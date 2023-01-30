@@ -29,6 +29,15 @@ class AchievementToTagRepositoryImplementation(
         )
     }
 
+    override fun deleteByAchievementId(achievementId: Int) {
+        jdbcTemplate.update(
+            "delete from AchievementToTagTable where achievementId = :achievementId",
+            mapOf(
+                "achievementId" to achievementId,
+            )
+        )
+    }
+
     companion object {
         val ROW_MAPPER = RowMapper<AchievementToTagModel> { it, _ ->
             AchievementToTagModel(

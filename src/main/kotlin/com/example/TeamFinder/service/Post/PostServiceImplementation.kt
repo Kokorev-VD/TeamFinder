@@ -1,11 +1,14 @@
 package com.example.TeamFinder.service.Post
 
 import com.example.TeamFinder.dto.Post.*
+import com.example.TeamFinder.dto.Tag.Tag
 import com.example.TeamFinder.dto.User.User
 import com.example.TeamFinder.model.Post.PostModel
 import com.example.TeamFinder.repository.MarkRepository.MarkRepository
 import com.example.TeamFinder.repository.PostRepository.PostRepository
 import com.example.TeamFinder.repository.PostRepository.PostToPostRepository
+import com.example.TeamFinder.repository.TagRepository.TagRepository
+import com.example.TeamFinder.repository.TagRepository.TagSubjectRepository
 import com.example.TeamFinder.repository.TagToPostRepository.TagToPostRepository
 import com.example.TeamFinder.repository.TeamRepository.TeamRepository
 import com.example.TeamFinder.repository.UserCreatorToPostRepository.UserCreatorToPostRepository
@@ -24,6 +27,8 @@ class PostServiceImplementation(
     @Autowired private val userService: UserService,
     @Autowired private val postToPostRepository: PostToPostRepository,
     @Autowired private val userCreatorToPostRepository: UserCreatorToPostRepository,
+    @Autowired private val tagRepository: TagRepository,
+    @Autowired private val tagSubjectRepository: TagSubjectRepository,
 ) : PostService {
 
     override fun getById(id: Int): MainInfoPost {
@@ -54,8 +59,13 @@ class PostServiceImplementation(
     override fun getPostMarkById(id: Int): PostMark =
         PostMark(id, markRepository.getPosMarksByPostId(id), markRepository.getNegMarksByPostId(id))
 
-    override fun getPostTagById(id: Int): PostTag =
-        PostTag(id, tagToPostRepository.getListTagsByPostId(id))
+    override fun getPostTagById(id: Int): PostTag {
+        val res = mutableListOf<Tag>()
+        for (tag in tagToPostRepository.getListTagsByPostId(id)) {
+            res.add(Tag(tag, tagSubjectRepository.getTagSubjectById(tagRepository.getByTitle(tag).id).subject))
+        }
+        return PostTag(id, res)
+    }
 
     override fun getRelatedPost(id: Int): RelatedPost =
         RelatedPost(
@@ -83,7 +93,7 @@ class PostServiceImplementation(
     override fun updatePostTag(newPost: PostTag) {
         tagToPostRepository.deleteByPostId(newPost.postId)
         for (tag in newPost.tagList) {
-            tagToPostRepository.setTagByPostIdAndTagTitle(newPost.postId, tag)
+            tagToPostRepository.setTagByPostIdAndTagTitle(newPost.postId, tag.title)
         }
     }
 

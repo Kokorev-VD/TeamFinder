@@ -24,7 +24,7 @@ class TagToUserRepositoryImplementation(
 
     override fun getTagsByUserId(userId: Int): List<TagToUserModel> =
         jdbcTemplate.query(
-            "select * from tagToUserTable where userId = :userId",
+            "select * from tagToUserTable where userId = :userId order by userId, tagId",
             mapOf(
                 "userId" to userId
             ),
@@ -32,7 +32,7 @@ class TagToUserRepositoryImplementation(
         )
 
     override fun setTagByUserIdAndTagTitle(userId: Int, tagTitle: String) {
-        val tagId: Int = tagRepository.getByTitile(tagTitle).id
+        val tagId: Int = tagRepository.getByTitle(tagTitle).id
         jdbcTemplate.update(
             "insert into tagToUserTable (tagId, userId) values (:tagId, :userId)",
             mapOf(
@@ -43,7 +43,7 @@ class TagToUserRepositoryImplementation(
     }
 
     override fun deleteByUserIdAndTagTitle(userId: Int, tagTitle: String) {
-        val tagId: Int = tagRepository.getByTitile(tagTitle).id
+        val tagId: Int = tagRepository.getByTitle(tagTitle).id
         jdbcTemplate.update(
             "delete from tagToUserTable where tagId = :tagId and userId = :userId",
             mapOf(

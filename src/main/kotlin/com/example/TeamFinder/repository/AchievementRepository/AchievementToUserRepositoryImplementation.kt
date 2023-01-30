@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository
 class AchievementToUserRepositoryImplementation(
     @Autowired val jdbcTemplate: NamedParameterJdbcTemplate,
     @Autowired val achievementRepository: AchievementRepository,
+    @Autowired val achievementToTagRepository: AchievementToTagRepository,
+    @Autowired val achievementToTypeRepository: AchievementToTypeRepository,
 ) : AchievementToUserRepository {
 
     override fun getByUserId(userId: Int): List<AchievementToUserModel> =
@@ -42,8 +44,16 @@ class AchievementToUserRepositoryImplementation(
     }
 
     override fun update(userAchievement: UserAchievement) {
+        val m = getByUserId(userAchievement.userId)
         deleteByUserId(userAchievement.userId)
+        for (i in m) {
+            println(i.toString())
+            achievementToTagRepository.deleteByAchievementId(i.achievementId)
+            achievementToTypeRepository.deleteByAchievementId(i.achievementId)
+            achievementRepository.deleteById(i.achievementId)
+        }
         for (achievement in userAchievement.achievement) {
+            achievementRepository.setAchievement(achievement.achievementTitle)
             setByAchievementIdAndUserId(
                 achievementRepository.getIdByAchievement(achievement.achievementTitle).id,
                 userAchievement.userId

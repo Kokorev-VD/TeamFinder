@@ -45,6 +45,15 @@ class AchievementRepositoryImplementation(
             ROW_MAPPER
         ).first()
 
+    override fun deleteById(id: Int) {
+        jdbcTemplate.update(
+            "delete from achievementTable where id = :id",
+            mapOf(
+                "id" to id,
+            )
+        )
+    }
+
     companion object {
         val ROW_MAPPER = RowMapper<AchievementModel> { it, _ ->
             AchievementModel(

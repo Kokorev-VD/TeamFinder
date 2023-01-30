@@ -13,12 +13,12 @@ class JobRepositoryImplementation(
 
     override fun findLastId(): Int =
         jdbcTemplate.query(
-            "select max(id) from JobTable",
+            "select * from JobTable where id = (select max(id) from JobTable)",
             ROW_MAPPER
         ).first().id
 
     override fun createNewJob(name: String) {
-        val id = findLastId()
+        val id = findLastId() + 1
         jdbcTemplate.update(
             "insert into JobTable (id, name) values (:id, :name)",
             mapOf(
@@ -45,13 +45,22 @@ class JobRepositoryImplementation(
             ).firstOrNull() == null
         ) {
             createNewJob(name)
-            findLastId() - 1
+            findLastId()
         } else {
             jdbcTemplate.query(
                 "select * from JobTable where name = :name", mapOf("name" to name),
                 ROW_MAPPER
             ).first().id
         }
+    }
+
+    override fun deleteById(id: Int) {
+        jdbcTemplate.update(
+            "delete from JobTable where id = :id",
+            mapOf(
+                "id" to id,
+            )
+        )
     }
 
     companion object {

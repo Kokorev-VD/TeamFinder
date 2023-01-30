@@ -79,7 +79,11 @@ class Controller(
 
     @PutMapping("/user/update/tag")
     fun updateUserTags(@RequestBody userTag: UserTag) {
-        userService.updateUserTag(userTag.id, userTag.tag)
+        val tag = mutableListOf<String>()
+        for (i in userTag.tag) {
+            tag.add(i.title)
+        }
+        userService.updateUserTag(userTag.id, tag)
     }
 
     @PostMapping("/auth/log")

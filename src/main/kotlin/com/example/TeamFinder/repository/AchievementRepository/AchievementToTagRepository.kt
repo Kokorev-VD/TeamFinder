@@ -8,4 +8,5 @@ interface AchievementToTagRepository {
 
     fun setByAchievementIdAndTagId(achievementId: Int, tagId: Int)
 
+    fun deleteByAchievementId(achievementId: Int)
 }

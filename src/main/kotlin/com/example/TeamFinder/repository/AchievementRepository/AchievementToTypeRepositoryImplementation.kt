@@ -29,6 +29,15 @@ class AchievementToTypeRepositoryImplementation(
         )
     }
 
+    override fun deleteByAchievementId(achievementId: Int) {
+        jdbcTemplate.update(
+            "delete from AchievementToTypeTable where achievementId = :achievementId",
+            mapOf(
+                "achievementId" to achievementId,
+            )
+        )
+    }
+
     companion object {
         val ROW_MAPPER = RowMapper<AchievementToTypeModel> { it, _ ->
             AchievementToTypeModel(

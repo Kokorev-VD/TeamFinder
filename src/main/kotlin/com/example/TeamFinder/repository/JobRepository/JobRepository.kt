@@ -10,4 +10,5 @@ interface JobRepository {
 
     fun findJobByName(name: String): Int
 
+    fun deleteById(id: Int)
 }

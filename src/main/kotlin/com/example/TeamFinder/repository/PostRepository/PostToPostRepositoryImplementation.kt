@@ -52,9 +52,12 @@ class PostToPostRepositoryImplementation(
         for (i in list) {
             res.add(
                 MainInfoPost(
-                    i.derivedPostId, postRepository.findById(i.derivedPostId).title,
-                    userLoginParamsRepository.getById(userCreatorToPostRepository.getUserCreatorToPostModelByPostId(id).userId).login,
-                    postRepository.findById(id).body
+                    i.basedPostId,
+                    postRepository.findById(i.basedPostId).title,
+                    postRepository.findById(i.basedPostId).icon,
+                    postRepository.findById(i.basedPostId).description,
+                    userLoginParamsRepository.getById(userCreatorToPostRepository.getUserCreatorToPostModelByPostId(i.basedPostId).userId).login,
+                    postRepository.findById(i.basedPostId).body
                 )
             )
         }
@@ -67,9 +70,12 @@ class PostToPostRepositoryImplementation(
         for (i in list) {
             res.add(
                 MainInfoPost(
-                    i.derivedPostId, postRepository.findById(i.derivedPostId).title,
-                    userLoginParamsRepository.getById(userCreatorToPostRepository.getUserCreatorToPostModelByPostId(id).userId).login,
-                    postRepository.findById(id).body
+                    i.derivedPostId,
+                    postRepository.findById(i.derivedPostId).title,
+                    postRepository.findById(i.derivedPostId).icon,
+                    postRepository.findById(i.derivedPostId).description,
+                    userLoginParamsRepository.getById(userCreatorToPostRepository.getUserCreatorToPostModelByPostId(i.derivedPostId).userId).login,
+                    postRepository.findById(i.derivedPostId).body
                 )
             )
         }

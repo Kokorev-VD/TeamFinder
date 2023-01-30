@@ -2,6 +2,7 @@ package com.example.TeamFinder.service.User
 
 import com.example.TeamFinder.dto.Achievement.Achievement
 import com.example.TeamFinder.dto.Response.Response
+import com.example.TeamFinder.dto.Tag.Tag
 import com.example.TeamFinder.dto.User.*
 import com.example.TeamFinder.repository.AchievementRepository.*
 import com.example.TeamFinder.repository.CityToUserRepository.CityToUserRepository
@@ -9,6 +10,7 @@ import com.example.TeamFinder.repository.JobRepository.JobRepository
 import com.example.TeamFinder.repository.JobToUserRepository.JobToUserRepository
 import com.example.TeamFinder.repository.MarkRepository.MarkRepository
 import com.example.TeamFinder.repository.TagRepository.TagRepository
+import com.example.TeamFinder.repository.TagRepository.TagSubjectRepository
 import com.example.TeamFinder.repository.TagToUserRepository.TagToUserRepository
 import com.example.TeamFinder.repository.TeamRepository.TeamRepository
 import com.example.TeamFinder.repository.UserCreatorToPostRepository.UserCreatorToPostRepository
@@ -35,6 +37,7 @@ class UserServiceImplementation(
     @Autowired private val jobRepository: JobRepository,
     @Autowired private val cityToUserRepository: CityToUserRepository,
     @Autowired private val tagRepository: TagRepository,
+    @Autowired private val tagSubjectRepository: TagSubjectRepository,
 ): UserService {
     override fun getById(id: Int): User {
         val userModel = userRepository.findById(id)
@@ -54,15 +57,29 @@ class UserServiceImplementation(
                 Achievement(
                     achievementRepository.getById(i.achievementId).achievement,
                     achievementTypeRepository.getById(achievementToTypeRepository.getByAchievementId(i.achievementId).typeId).name,
-                    tagRepository.getById(achievementToTagRepository.getByAchievementId(i.achievementId).tagId).title
+                    Tag(
+                        tagRepository.getById(achievementToTagRepository.getByAchievementId(i.achievementId).tagId).title,
+                        tagSubjectRepository.getTagSubjectById(
+                            tagRepository.getById(
+                                achievementToTagRepository.getByAchievementId(
+                                    i.achievementId
+                                ).tagId
+                            ).subjectId
+                        ).subject,
+                    ),
                 )
             )
         }
         return UserAchievement(id, res)
     }
 
-    override fun getUserTags(id: Int): UserTag =
-        UserTag(id, tagToUserRepository.getStringTagsByUserId(id))
+    override fun getUserTags(id: Int): UserTag {
+        val res = mutableListOf<Tag>()
+        for (tag in tagToUserRepository.getStringTagsByUserId(id)) {
+            res.add(Tag(tag, tagSubjectRepository.getTagSubjectById(tagRepository.getByTitle(tag).subjectId).subject))
+        }
+        return UserTag(id, res)
+    }
 
     override fun getUserTeam(id: Int): UserTeam {
         val res = mutableListOf<Int>()
@@ -117,7 +134,7 @@ class UserServiceImplementation(
             val achievementId = achievementRepository.getIdByAchievement(achievement.achievementTitle).id
             achievementToTagRepository.setByAchievementIdAndTagId(
                 achievementId,
-                tagRepository.getByTitile(achievement.achievementTag).id
+                tagRepository.getByTitle(achievement.achievementTag.title).id
             )
             achievementToTypeRepository.setByAchievementIdAndTypeId(
                 achievementId,
