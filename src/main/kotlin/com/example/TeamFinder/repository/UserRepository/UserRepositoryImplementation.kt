@@ -23,10 +23,10 @@ class UserRepositoryImplementation(
             ROW_MAPPER
         ).first()
 
-    override fun create(id: Int, tg: String, description: String, imageId: Int, email: String) {
+    override fun create(id: Int, tg: String, description: String, imageId: Int, email: String, name: String) {
         jdbcTemplate.update(
-            "insert into userTable (id, tg, description, imageId, email)" +
-                    " values (:id, :tg, :description, :imageId, :email)",
+            "insert into userTable (id, tg, description, imageId, email, name)" +
+                    " values (:id, :tg, :description, :imageId, :email, :name)",
             MapSqlParameterSource(
                 mapOf(
                     "id" to id,
@@ -34,15 +34,16 @@ class UserRepositoryImplementation(
                     "description" to description,
                     "imageId" to imageId,
                     "email" to email,
+                    "name" to name,
                 )
             ),
         )
     }
 
 
-    override fun update(id: Int, tg: String, description: String, imageId: Int, email: String) {
+    override fun update(id: Int, tg: String, description: String, imageId: Int, email: String, name: String) {
         delete(id)
-        create(id, tg, description, imageId, email)
+        create(id, tg, description, imageId, email, name)
     }
 
     override fun delete(id: Int) {
@@ -62,6 +63,7 @@ class UserRepositoryImplementation(
                 description = rs.getString("description"),
                 imageId = rs.getInt("imageId"),
                 email = rs.getString("email"),
+                name = rs.getString("name"),
             )
         }
     }

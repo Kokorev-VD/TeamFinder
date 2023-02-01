@@ -47,6 +47,7 @@ class UserServiceImplementation(
             description = userModel.description,
             imageId = userModel.imageId,
             email = userModel.email,
+            name = userModel.name,
         )
     }
 
@@ -144,7 +145,7 @@ class UserServiceImplementation(
     }
 
     override fun updateUserInfo(id: Int, user: User) {
-        userRepository.update(id, user.tg, user.description, user.imageId, user.email)
+        userRepository.update(id, user.tg, user.description, user.imageId, user.email, user.name)
     }
 
     override fun updateUserTag(id: Int, tag: List<String>) {

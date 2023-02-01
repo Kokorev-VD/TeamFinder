@@ -6,4 +6,5 @@ data class User(
     val description: String = "",
     val imageId: Int = 0,
     val email: String = "",
+    val name: String = "",
 )

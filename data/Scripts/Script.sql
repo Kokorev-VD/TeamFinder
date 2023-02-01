@@ -102,7 +102,7 @@ delete from tagsubjecttable  where id = 0
 
 delete from tagtable where id = 0
 
-select * from tagsubjecttable
+select * from tagtable
 
 605
 
@@ -110,15 +110,65 @@ update usertable set description = 'Всем привет! Меня зовут �
 
 select * from achievementtable
 
-delete from jobtable where id = -1
+delete from jobtable where id = 0
 
-insert into jobtable values(0 , 'ghj')
+insert into jobtable values(-1 , 'ghj')
+
+insert into tagtousertable values(4, 0)
+
+select * from tagsubjecttable 
+
+select * from tagtousertable
+
+select * from userloginparamstable 
+
+select * from usertable
+
+alter table userTable add column name text
+
+update userTable set name = 'Денис Георгиев' where id = 3
+
+select * from posttable
+
+insert into posttable values(0, 'Team up system', 'Надо разработать удобное приложение под Android, которое значительно упростит поиск участников для проектной команды', 'Android приложение для поиска проектной команды', 3)
+
+insert into usercreatortoposttable values(0, 0)
+
+insert into teamtable values(0, 2)
+
+select * from marktable 
+
+insert into markTable values(0, 2, 1)
+
+delete from posttable where id = 1
+
+select * from tagtable 
+
+select * from tagtoposttable 
+
+insert into tagtoposttable values(30, 0)
+
+insert into tagtoposttable values(36, 0)
+
+insert into tagtoposttable values(119, 0)
+
+update tagtable set title = 'Прог. инженерия' where id = 36
+
+delete from tagtouserTable where userId = 0
 
 select * from jobtable
+
+select * from jobtousertable 
+
+select * from usertoachievementtable
 
 delete from achievementtable where id > 0
 
 delete from achievementtotagtable where achievementid >= 0
+
+delete from achievementtotypetable where achievementid >=0
+
+delete from usertoachievementtable where achievementid >=0
 
 select *
 
