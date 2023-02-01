@@ -6,6 +6,7 @@ import com.example.TeamFinder.dto.Response.Response
 import com.example.TeamFinder.dto.User.*
 import com.example.TeamFinder.service.Post.PostService
 import com.example.TeamFinder.service.Recommendation.RecommendationService
+import com.example.TeamFinder.service.Tag.TagService
 import com.example.TeamFinder.service.Team.TeamService
 import com.example.TeamFinder.service.User.UserService
 import org.springframework.web.bind.annotation.*
@@ -17,6 +18,7 @@ class Controller(
     private val postService: PostService,
     private val teamService: TeamService,
     private val recommendationService: RecommendationService,
+    private val tagService: TagService,
 ) {
 
     // Методы, которые относятся к User
@@ -98,8 +100,24 @@ class Controller(
     //Методы, которые относятся к Post
 
     @GetMapping("/post/{id}")
-    fun getPostById(@PathVariable id: Int): MainInfoPost =
-        postService.getById(id)
+    fun getPostById(@PathVariable id: Int): Post {
+        val mainInfoPost = postService.getById(id)
+        val postTeam = postService.getPostTeamById(id)
+        val postMark = postService.getPostMarkById(id)
+        val postTag = postService.getPostTagById(id)
+        return Post(
+            id = id,
+            title = mainInfoPost.title,
+            icon = mainInfoPost.icon,
+            description = mainInfoPost.description,
+            creatorLogin = mainInfoPost.creatorLogin,
+            body = mainInfoPost.body,
+            team = postTeam.team,
+            posMark = postMark.posMarkCount,
+            negMark = postMark.negMarkCount,
+            tagList = postTag.tagList,
+        )
+    }
 
     @GetMapping("/post/team/{id}")
     fun getPostTeamById(@PathVariable id: Int): PostTeam =
@@ -164,5 +182,9 @@ class Controller(
     @GetMapping("recommend/user/{userId}")
     fun recommendPostByUserId(@PathVariable userId: Int): List<Int> =
         recommendationService.recommendedPostIdByUserId(userId)
+
+    @GetMapping("/tag")
+    fun getAllTag() =
+        tagService.getAllTag()
 
 }

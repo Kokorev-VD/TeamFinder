@@ -30,6 +30,12 @@ class TagSubjectRepositoryImplementation(
             ROW_MAPPER
         ).first()
 
+    override fun getAllTagSubject(): List<TagSubjectModel> =
+        jdbcTemplate.query(
+            "select * from TagSubjectTable",
+            ROW_MAPPER,
+        )
+
     companion object {
         private val ROW_MAPPER = RowMapper<TagSubjectModel> { rs, _ ->
             TagSubjectModel(

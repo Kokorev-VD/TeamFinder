@@ -62,7 +62,7 @@ class PostServiceImplementation(
     override fun getPostTagById(id: Int): PostTag {
         val res = mutableListOf<Tag>()
         for (tag in tagToPostRepository.getListTagsByPostId(id)) {
-            res.add(Tag(tag, tagSubjectRepository.getTagSubjectById(tagRepository.getByTitle(tag).id).subject))
+            res.add(Tag(tag, tagSubjectRepository.getTagSubjectById(tagRepository.getByTitle(tag).subjectId).subject))
         }
         return PostTag(id, res)
     }
@@ -82,12 +82,12 @@ class PostServiceImplementation(
             id
         )
         for (tag in newPost.tagList) {
-            tagToPostRepository.setTagByPostIdAndTagTitle(id, tag)
+            tagToPostRepository.setTagByPostIdAndTagTitle(id, tag.title)
         }
-        for (basedPost in newPost.basedPosts) {
-            postToPostRepository.setByBasedPostIdAndDerivedPostId(basedPost.id, id)
-        }
-
+        teamRepository.setByUserIdAndTeamId(
+            userLoginParamsRepository.getByLogin(newPost.creatorLogin)!!.id,
+            id
+        )
     }
 
     override fun updatePostTag(newPost: PostTag) {

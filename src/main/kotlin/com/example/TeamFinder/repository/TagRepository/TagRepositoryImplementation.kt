@@ -41,6 +41,12 @@ class TagRepositoryImplementation(
         )
     }
 
+    override fun getAllTag(): List<TagModel> =
+        jdbcTemplate.query(
+            "select * from TagTable",
+            ROW_MAPPER,
+        )
+
 
     private companion object {
         val ROW_MAPPER = RowMapper<TagModel> { rs, _ ->

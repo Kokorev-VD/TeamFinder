@@ -8,4 +8,5 @@ interface TagSubjectRepository {
 
     fun getTagSubjectById(id: Int): TagSubjectModel
 
+    fun getAllTagSubject(): List<TagSubjectModel>
 }

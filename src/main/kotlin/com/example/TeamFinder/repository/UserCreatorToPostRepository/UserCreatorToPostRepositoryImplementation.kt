@@ -15,7 +15,7 @@ class UserCreatorToPostRepositoryImplementation(
 ) : UserCreatorToPostRepository {
     override fun setUserCreatorIdToPost(userId: Int, postId: Int) {
         jdbcTemplate.update(
-            "inert into UserCreatorToPostTable (userId, postId) values (:userId, :postId)",
+            "insert into UserCreatorToPostTable (userId, postId) values (:userId, :postId)",
             mapOf(
                 "userId" to userId,
                 "postId" to postId,

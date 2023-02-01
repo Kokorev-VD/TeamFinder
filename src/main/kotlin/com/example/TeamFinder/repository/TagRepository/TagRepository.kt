@@ -9,4 +9,6 @@ interface TagRepository {
     fun getById(id: Int): TagModel
 
     fun setByIdAndTitle(id: Int, subjectId: Int, title: String)
+
+    fun getAllTag(): List<TagModel>
 }
